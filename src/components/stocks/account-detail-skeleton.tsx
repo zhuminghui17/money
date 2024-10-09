@@ -4,7 +4,7 @@ import { OfficeBuildingIcon, CreditCardIcon } from '@heroicons/react/outline';
 const AccountDetailSkeleton = () => {
   return (
     <Card
-      className="mx-auto"
+      className="mt-5 mx-auto"
       decoration="top"
       decorationColor="indigo"
     >

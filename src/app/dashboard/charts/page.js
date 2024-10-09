@@ -3,13 +3,10 @@
 import {
     Button,
     Card,
-    CategoryBar,
     Text,
     TextInput,
-    BarChart,
+    // BarChart,
     BarList,
-    Divider,
-    Grid,
     Title,
     Tab,
     TabList,
@@ -19,9 +16,8 @@ import {
     Flex,
     Metric,
     Legend,
-    AreaChart,
+    // AreaChart,
     Icon,
-    Callout,
     Bold,
     Select, 
     SelectItem,
@@ -29,23 +25,37 @@ import {
     MultiSelect,
     MultiSelectItem
 } from "@tremor/react";
-import { Accordion, AccordionHeader, AccordionBody, AccordionList } from "@tremor/react";
 import { CalculatorIcon, BookOpenIcon } from "@heroicons/react/outline";
 import { useCallback, useEffect, useState, Fragment, useRef } from "react";
+import { 
+    Bar,
+    BarChart,
+    Area,
+    AreaChart,
+    CartesianGrid,
+    XAxis,
+    Label,
+    Pie,
+    PieChart,
+    LabelList,
+    YAxis
+} from "recharts";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { useDispatch, useSelector } from "react-redux";
 import {
     ArrowNarrowRightIcon,
-    CurrencyDollarIcon,
     InformationCircleIcon,
-    NewspaperIcon,
     SearchIcon,
-    TrendingDownIcon,
-    TrendingUpIcon
 } from "@heroicons/react/solid";
 import { Dialog, Transition } from "@headlessui/react";
 import { ArrowsExpandIcon } from "@heroicons/react/outline";
 import Datepicker from "react-tailwindcss-datepicker";
-import { dateFormat, handleError, isEmpty } from "@/utils/util";
+import { handleError } from "@/utils/util";
 import {
     getChartsData,
     setAnalyzeFilterDate,
@@ -82,6 +92,7 @@ const formatters = {
     Transactions: number => `${numberFormatter(usNumberformatter(number))}`,
     Category: number => `${usNumberformatter(number, 2)}%`
 };
+
 const percentageFormatter = value =>
     `${Intl.NumberFormat("us")
         .format(value * 100)
@@ -216,6 +227,17 @@ export default function Charts() {
         yAxisWidth: 45
     };
 
+    const chartConfig = {
+        spend: {
+          label: selectedKpi === "spend" ? "Spend" : "Count",
+          color: "hsl(var(--chart-1))",
+        },
+        moneyIn: {
+          label: selectedKpi === "spend" ? "MoneyIn" : "MoneyInCount",
+          color: "hsl(var(--chart-2))",
+        },
+    };
+
     const barlistArgs = {
         className: "mt-2 overflow-visible whitespace-normal text-overflow  sm:w-full",
         data: chartDataByMonth.slice(0, 10),
@@ -288,6 +310,20 @@ export default function Charts() {
         setFilterDate(e);
         dispatch(setUserAnalyzeAISummary(""));
     };
+
+    const barListChartConfig = {
+        value: {
+            label: "Value",
+            color: "hsl(var(--chart-2))",
+        },
+        name: {
+            label: "Name",
+            color: "hsl(var(--chart-2))",
+        },
+        label: {
+            color: "hsl(var(--background))",
+        },
+    }
 
     return (
         <main className="min-h-screen p-4 m-auto max-w-7xl">
@@ -397,7 +433,33 @@ export default function Charts() {
                                     </div>
                                 </div>
                                 <div className="mt-8 overflow-auto">
-                                    <BarChart {...monthlySpendBarChartArgs} />
+                                    <ChartContainer className="mt-5 h-72 w-full" config={chartConfig}>
+                                        <BarChart accessibilityLayer data={filterCreditCards === true ? monthlySpendNoCards : monthlySpend}>
+                                            <CartesianGrid vertical={false} />
+                                            <XAxis
+                                                dataKey="date"
+                                                tickLine={false}
+                                                tickMargin={10}
+                                                axisLine={false}
+                                                // tickFormatter={(value) => value.slice(0, 3)}
+                                            />
+                                            <ChartTooltip
+                                                cursor={false}
+                                                content={<ChartTooltipContent indicator="dashed" />}
+                                            />
+                                            <Bar
+                                                dataKey={selectedKpi === "spend" ? "spend" : "count"}
+                                                fill={`var(--color-spend)`}
+                                                radius={4}
+                                            />
+                                            <Bar
+                                                dataKey={selectedKpi === "spend" ? "moneyIn" : "moneyInCount"}
+                                                fill={`var(--color-moneyIn)`}
+                                                radius={4}
+                                            />
+                                        </BarChart>
+                                    </ChartContainer>
+                                    {/* <BarChart {...monthlySpendBarChartArgs} /> */}
                                 </div>
                                 <br />
                             </Card>
@@ -431,7 +493,46 @@ export default function Charts() {
                                     </div>
                                 </div>
                                 <div className="mt-8 overflow-auto">
-                                    <AreaChart {...cumulativeSpendArgs} />
+                                    <ChartContainer className="mt-5 h-72 w-full" config={chartConfig}>
+                                        <AreaChart
+                                            accessibilityLayer
+                                            data={filterCreditCards === true ? cumulativeSpendNoCards : cumulativeSpend}
+                                            margin={{
+                                                left: 12,
+                                                right: 12,
+                                            }}
+                                        >
+                                            <CartesianGrid vertical={false} />
+                                            <XAxis
+                                                dataKey="date"
+                                                tickLine={false}
+                                                axisLine={false}
+                                                tickMargin={8}
+                                                // tickFormatter={(value) => value.slice(0, 3)}
+                                            />
+                                            <ChartTooltip
+                                                cursor={false}
+                                                content={<ChartTooltipContent indicator="dot" />}
+                                            />
+                                            <Area
+                                                dataKey={selectedKpi === "spend" ? "spend" : "count"}
+                                                type="natural"
+                                                fill="var(--color-spend)"
+                                                fillOpacity={0.4}
+                                                stroke="var(--color-spend)"
+                                                stackId="a"
+                                            />
+                                            <Area
+                                                dataKey={selectedKpi === "spend" ? "moneyIn" : "moneyInCount"}
+                                                type="natural"
+                                                fill="var(--color-moneyIn)"
+                                                fillOpacity={0.4}
+                                                stroke="var(--color-moneyIn)"
+                                                stackId="a"
+                                            />
+                                        </AreaChart>
+                                    </ChartContainer>
+                                    {/* <AreaChart {...cumulativeSpendArgs} /> */}
                                 </div>
                             </Card>
                             <AccountDetailSkeleton />
@@ -456,12 +557,12 @@ export default function Charts() {
                                             valueFormatter={formatters.Category}
                                         />
                                         <Legend
-                                            categories={donutChartData.map((item, index) => (
+                                            categories={donutChartData.filter(item => item.name !== null).map((item, index) => (
                                                 <span
                                                     className="block w-32 overflow-hidden md:inline text-ellipsis"
                                                     key={index}
                                                 >
-                                                    {item.name ? item.name : null}
+                                                    {item.name}
                                                 </span>
                                             ))}
                                             className="mt-6"
@@ -505,7 +606,6 @@ export default function Charts() {
                                                                 <Text className="text-base font-medium">
                                                                     Spend Categories
                                                                 </Text>
-                                                                <Text>%</Text>
                                                             </Flex>
                                                             <TextInput
                                                                 icon={SearchIcon}
@@ -515,7 +615,58 @@ export default function Charts() {
                                                                 onChange={event => setSearchQuery(event.target.value)}
                                                             />
                                                             <div className="relative mt-4 h-[74vh] overflow-y-auto overflow-x-hidden py-20">
-                                                                <BarList
+                                                                <ChartContainer className={`mr-4 sm:min-w-full h-72`} config={barListChartConfig}>
+                                                                    <BarChart
+                                                                        accessibilityLayer
+                                                                        data={donutAsBarData.filter(item => 
+                                                                            item.name !== null && 
+                                                                            item.name
+                                                                                .toLowerCase()
+                                                                                .includes(searchQuery.toLowerCase())
+                                                                        )}
+                                                                        layout="vertical"
+                                                                        margin={{
+                                                                            right: 16,
+                                                                        }}
+                                                                    >
+                                                                        <CartesianGrid horizontal={false} />
+                                                                        <YAxis
+                                                                            dataKey="name"
+                                                                            type="category"
+                                                                            tickLine={false}
+                                                                            tickMargin={10}
+                                                                            axisLine={false}
+                                                                            hide
+                                                                        />
+                                                                        <XAxis dataKey="value" type="number" hide />
+                                                                        <ChartTooltip
+                                                                            cursor={false}
+                                                                            content={<ChartTooltipContent indicator="line" />}
+                                                                        />
+                                                                        <Bar
+                                                                            dataKey="value"
+                                                                            layout="vertical"
+                                                                            fill="var(--color-value)"
+                                                                            radius={4}
+                                                                        >
+                                                                        <LabelList
+                                                                            dataKey="name"
+                                                                            position="insideLeft"
+                                                                            offset={8}
+                                                                            className="fill-gray-900 dark:fill-white"
+                                                                            fontSize={12}
+                                                                        />
+                                                                        <LabelList
+                                                                            dataKey="value"
+                                                                            position="right"
+                                                                            offset={8}
+                                                                            className="fill-foreground"
+                                                                            fontSize={12}
+                                                                        />
+                                                                        </Bar>
+                                                                    </BarChart>
+                                                                </ChartContainer>
+                                                                {/* <BarList
                                                                     data={donutAsBarData.filter(item => 
                                                                         item.name !== null && 
                                                                         item.name
@@ -526,8 +677,8 @@ export default function Charts() {
                                                                     showAnimation={true}
                                                                     showTooltip={true}
                                                                     color="slate"
-                                                                />
-                                                                <div className="sticky inset-x-0 bottom-0 h-20 p-6 bg-gradient-to-t from-white to-transparent" />
+                                                                /> */}
+                                                                {/* <div className="sticky inset-x-0 bottom-0 h-20 p-6 bg-gradient-to-t from-white to-transparent" /> */}
                                                             </div>
                                                             <Button
                                                                 className="w-full mt-4"
@@ -552,11 +703,54 @@ export default function Charts() {
                                     <Text>
                                         <Bold>Merchant</Bold>
                                     </Text>
-                                    <Text>
-                                        <Bold>Total Spend</Bold>
-                                    </Text>
                                 </Flex>
-                                <BarList {...barlistArgs} />
+                                <ChartContainer className="mt-2 h-72 overflow-visible whitespace-normal text-overflow sm:w-full" config={barListChartConfig}>
+                                    <BarChart
+                                        accessibilityLayer
+                                        data={chartDataByMonth.slice(0, 10)}
+                                        layout="vertical"
+                                        margin={{
+                                            right: 16,
+                                        }}
+                                    >
+                                        <CartesianGrid horizontal={false} />
+                                        <YAxis
+                                            dataKey="name"
+                                            type="category"
+                                            tickLine={false}
+                                            tickMargin={10}
+                                            axisLine={false}
+                                            hide
+                                        />
+                                        <XAxis dataKey="value" type="number" hide />
+                                        <ChartTooltip
+                                            cursor={false}
+                                            content={<ChartTooltipContent indicator="line" />}
+                                        />
+                                        <Bar
+                                            dataKey="value"
+                                            layout="vertical"
+                                            fill="var(--color-value)"
+                                            radius={4}
+                                        >
+                                        <LabelList
+                                            dataKey="name"
+                                            position="insideLeft"
+                                            offset={8}
+                                            className="fill-gray-900 dark:fill-white"
+                                            fontSize={12}
+                                        />
+                                        {/* <LabelList
+                                            dataKey="value"
+                                            position="right"
+                                            offset={8}
+                                            className="fill-foreground"
+                                            fontSize={12}
+                                        /> */}
+                                        </Bar>
+                                    </BarChart>
+                                </ChartContainer>
+                                {/* <BarList {...barlistArgs} /> */}
                                 <Flex className="pt-4">
                                     <Link
                                         href={`/dashboard/transaction?financeCategory=${chartDataByMonth[0]?.name?.replace(
