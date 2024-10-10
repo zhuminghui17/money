@@ -1,6 +1,5 @@
 "use client";
-import { Fragment } from "react";
-import { Dialog, Transition } from "@headlessui/react";
+
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getPaymentTransaction } from "@/store/actions/useTransaction";
@@ -13,7 +12,6 @@ import {
     Text,
     Flex,
     Icon,
-    LineChart,
     MultiSelect,
     MultiSelectItem,
     Select,
@@ -28,30 +26,12 @@ import {
     NumberInput,
     Divider
 } from "@tremor/react";
-import { Metric, AreaChart, BadgeDelta, DeltaType, Grid } from "@tremor/react";
+import { Metric, Grid } from "@tremor/react";
 import { dateFormat, handleError, isEmpty } from "@/utils/util";
 import { getAllCategories } from "@/store/actions/usePlaid";
-import Pagination from "@/components/Basic/Pagination";
-import { ArrowsExpandIcon } from "@heroicons/react/outline";
 import { useSearchParams } from "next/navigation";
-
-const valueFormatter = number => `$${Intl.NumberFormat("us").format(number).toString()}`;
-
-function convertIsoDateToCustomFormat(isoDateString) {
-    return new Date(isoDateString).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric"
-    });
-}
-function editDateProperty(transactions) {
-    for (let i = 0; i < transactions.length; i++) {
-        if (transactions[i].hasOwnProperty("date")) {
-            transactions[i].date = convertIsoDateToCustomFormat(transactions[i].date);
-        }
-    }
-    return transactions;
-}
+import { valueFormatter } from "@/utils/util";
+import Browse from "./Browe";
 
 function formatCurrencyValue(value) {
     if (typeof value === "string") {
@@ -73,11 +53,11 @@ function formatCurrencyValue(value) {
 export default function Transactions() {
     const dispatch = useDispatch();
     const searchParams = useSearchParams();
-    const { isItemAccess, isTransactionsLoaded, transactionsInfo, categories, personalFinanceCategories } = useSelector(
+    const { isItemAccess, isTransactionsLoaded, categories, personalFinanceCategories } = useSelector(
         state => state.plaid
     );
     const { data: transactions, size: total } = useSelector(state => state.transactions);
-    const { user, items, annualTransactionData } = useSelector(state => state.user);
+    const { items, annualTransactionData } = useSelector(state => state.user);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedFinCategories, setSelectedFinCategories] = useState(
         isEmpty(searchParams.get("financeCategory")) ? [] : searchParams.get("financeCategory")?.split(",")
@@ -90,13 +70,7 @@ export default function Transactions() {
     );
     const currentDate = new Date();
     const threeMonthsAgo = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, currentDate.getDate());
-    // Code below sets date a whole year. Loads all transactions from the past year.
-    // const [filterDate, setFilterDate] = useState({
-    //     startDate: isEmpty(searchParams.get("startDate"))
-    //         ? dateFormat(new Date(new Date().getFullYear(), 0, 1))
-    //         : searchParams.get("startDate"),
-    //     endDate: isEmpty(searchParams.get("endDate")) ? dateFormat(new Date()) : searchParams.get("endDate")
-    // });
+
     const [filterDate, setFilterDate] = useState({
         startDate: isEmpty(searchParams.get("startDate"))
             ? dateFormat(threeMonthsAgo)
@@ -235,8 +209,6 @@ export default function Transactions() {
             metric: valueFormatter(moneyOut)
         }
     ];
-
-    const reversedTransactions = editDateProperty([...transactions].reverse());
 
     return (
         <main className="min-h-screen p-4 m-auto max-w-7xl">
@@ -397,27 +369,8 @@ export default function Transactions() {
                 )}
                 
                 <br />
-                { showFilters && reversedTransactions && 
-                <Card className="relative w-full mt-6 overflow-auto">
-                    <Text>Browse transactions over time </Text>
+                { showFilters && <Browse />}
                 <br />
-                <LineChart
-                    data={reversedTransactions}
-                    index={"date"}
-                    showAnimation={true}
-                    startEndOnly={true}
-                    showTooltip={true}
-                    connectNulls={true}
-                    autoMinValue={true}
-                    showGradient={true}
-                    showLegend={false}
-                    showGridLines={true}
-                    categories={["amount", "name", "category"]}
-                    curveType="monotone"
-                    yAxisWidth={50}
-                />
-            </Card>}
-            <br />
                 <Card className="relative w-full p-3 mt-6 md:p-6">
                 <>
                     <Table className="w-[calc(100vw_-_theme(spacing.16))] sm:w-full mt-6 overflow-auto">
