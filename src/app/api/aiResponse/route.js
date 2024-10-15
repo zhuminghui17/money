@@ -1,5 +1,4 @@
 import { OpenAI } from "openai";
-import { OpenAIStream, StreamingTextResponse } from "ai";
 // import { getFullUserInfo } from "@/app/actions/user";
 import { NextResponse } from "next/server";
 

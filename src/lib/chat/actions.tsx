@@ -42,7 +42,7 @@ async function submitUserMessage(content: string) {
     endDate: new Date().toISOString().split('T')[0]
   };
 
-  const res = await fetch(`${process.env.NEXT_APP_API_HOST}/api/user/charts`, {
+  const res = await fetch(`/api/user/charts`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ async function submitUserMessage(content: string) {
   });
   const chatData = await res.json();
 
-  const res2 = await fetch(`${process.env.NEXT_APP_API_HOST}/api/user/dashboard`, {
+  const res2 = await fetch(`/api/user/dashboard`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ async function submitUserMessage(content: string) {
 
   const chatData2 = await res2.json();
 
-  const res3 = await fetch(`${process.env.NEXT_APP_API_HOST}/api/user`, {
+  const res3 = await fetch(`/api/user`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

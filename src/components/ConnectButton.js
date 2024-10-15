@@ -26,7 +26,7 @@ const ConnectButton = ({ children, type, setShowConnectModal }) => {
                     );
                     return;
                 }
-                const { isItemAccess, item_id, accounts } = await response.data;
+                const { isItemAccess, item_id, accounts } = response.data;
                 dispatch(setPlaidState({ isItemAccess: isItemAccess }));
                 if (!isEmpty(item_id)) {
                     dispatch(

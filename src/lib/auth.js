@@ -1,6 +1,6 @@
 import GoogleProvider from "next-auth/providers/google";
 import apiCall from "@/utils/apiCall";
-import NextAuth from "next-auth/next";
+import { signIn } from "@/server/auth"
 
 export const authOptions = {
     pages: {
@@ -20,14 +20,10 @@ export const authOptions = {
         async signIn({ account, profile, user }) {
             if (account.provider === "google") {
                 try {
-                    const res = await apiCall.post(
-                        `${process.env.NEXT_APP_API_HOST}/api/auth/signin`,
-                        profile
-                    );
-                    user.isNewUser = res.data?.isNewUser;
-                    user.isPro = res.data?.isPro;
-                    user.isAdmin = res.data?.isAdmin;
-                    user.isPro = res.data?.isPro;
+                    const res = await signIn(profile);
+                    user.isNewUser = res.isNewUser;
+                    user.isPro = res.isPro;
+                    user.isAdmin = res.isAdmin;
                 } catch (err) {
                     console.log(err);
                 }

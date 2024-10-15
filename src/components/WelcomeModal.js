@@ -110,7 +110,7 @@ const WelcomeModal = () => {
                                     className="w-0"
                                     as="div"
                                 >
-                                    <div className="w-[40vw] pr-4">
+                                    <div className="w-[40vw] pr-4 text-black">
                                         <strong><p>{"Start your 14-day free trial to Qashboard, the Q&A dashboard to unlock a bird's eye view of your finances. No card down today!"}</p></strong>
                                         <br/><p>Start connecting your bank, credit cards, and investment accounts using <a href="https://plaid.com/" target="blank">Plaid</a>{" & "} store the financial data to your own database!</p>
                                         <div className="mt-4" height={35}> 
@@ -213,15 +213,15 @@ const WelcomeModal = () => {
                                         <Text className="text-sm text-gray-600">
                                             {"If you replace the default MongoDB URL, ensure it's correctly formatted with database server's address, port, and credentials. Format: mongodb://username:password@server:port/dbname"}
                                         </Text>
-                            <br/>
-                            <Flex justifyContent="center">
-                                <Button onClick={handleCloseModal}>
-                                    Submit
-                                </Button>
-                            </Flex>
-                            <br/>
-                        </div>
-                    </Transition>
+                                        <br/>
+                                        <Flex justifyContent="center">
+                                            <Button onClick={handleCloseModal}>
+                                                Submit
+                                            </Button>
+                                        </Flex>
+                                        <br/>
+                                    </div>
+                                </Transition>
                             </div>
                             <div className="w-full gap-2 mt-3">
                                 <nav
@@ -229,6 +229,7 @@ const WelcomeModal = () => {
                                     aria-label="Progress"
                                 >
                                     { currentStep > 0 && <button
+                                        className="text-black"
                                         type="button"
                                         disabled={currentStep === 0}
                                         onClick={() => prevStep()}
@@ -269,6 +270,7 @@ const WelcomeModal = () => {
                                         ))}
                                     </ol>
                                    {currentStep < 2 && <button
+                                        className="text-black"
                                         type="button"
                                         disabled={currentStep === 2}
                                         onClick={() => nextStep()}
