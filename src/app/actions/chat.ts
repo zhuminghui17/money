@@ -2,21 +2,19 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { kv } from '@vercel/kv'
-
-// import { auth } from '@/lib/auth'
 import { type Chat } from '@/lib/types'
-import apiCall from './auth';
 import { getFullUserInfo } from './auth'
+import {
+  getChatInfo,
+  getChatInfoById,
+  deleteChatChannel,
+  saveChatMessage,
+  clearChatHistory
+} from "@/server/chat";
 
 export async function getChats(userId?: string | null) {
-  if (!userId) {
-    return []
-  }
-
   try {
-    const res = await apiCall.get(`${process.env.NEXT_APP_API_HOST}/api/chat`);
-    const results = res.data;
+    const results = await getChatInfo()
 
     return results as Chat[]
   } catch (error) {
@@ -25,8 +23,8 @@ export async function getChats(userId?: string | null) {
 }
 
 export async function getChat(id: string, userId: string) {
-  const res = await apiCall.get(`${process.env.NEXT_APP_API_HOST}/api/chat/${id}`);
-  const chat = res.data as Chat;
+  const result = await getChatInfoById(id)
+  const chat = result as Chat;
 
   if (!chat) {
     return null
@@ -44,7 +42,7 @@ export async function removeChat({ id, path }: { id: string; path: string }) {
     }
   }
 
-  await apiCall.delete(`${process.env.NEXT_APP_API_HOST}/api/chat/${id}`);
+  await deleteChatChannel(id)
 
   revalidatePath('/')
   return revalidatePath(path)
@@ -59,7 +57,7 @@ export async function clearChats() {
     }
   }
 
-  await apiCall.patch(`${process.env.NEXT_APP_API_HOST}/api/chat/clear`);
+  await clearChatHistory()
 
   revalidatePath('/dashboard/chat')
   return redirect('/dashboard/chat')
@@ -107,7 +105,7 @@ export async function saveChat(chat: Chat) {
 
   if (session) {
     try {
-      await apiCall.patch(`${process.env.NEXT_APP_API_HOST}/api/chat/save`, chat);
+      await saveChatMessage(chat)
     } catch (error) {
       console.log(error);
     }

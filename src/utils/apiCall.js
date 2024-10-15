@@ -1,12 +1,10 @@
 import axios from "axios";
 import { getSession } from "next-auth/react";
 
-const baseURL = process.env.NEXT_APP_API_HOST;
 const CancelToken = axios.CancelToken;
 const source = CancelToken.source();
 
 const apiCall = axios.create({
-    baseURL,
     headers: {
         "Content-Type": "application/json",
         Accept: "application/json"

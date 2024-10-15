@@ -4,7 +4,7 @@ import apiCall from "@/utils/apiCall";
 
 export async function getFullUserInfo() {
     const { accessToken } = await getServerSession(authOptions);
-    const res = await apiCall.get(`${process.env.NEXT_APP_API_HOST}/api/auth`, {
+    const res = await apiCall.get(`/api/auth`, {
         headers: {
             Authorization: `Bearer ${accessToken}`
         }

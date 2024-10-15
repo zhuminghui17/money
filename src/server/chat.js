@@ -1,5 +1,6 @@
 "use server"
 
+import { addAbortListener } from "events";
 import db from "../lib/db";
 import { getUserInfo } from "./auth";
 
@@ -23,15 +24,13 @@ export const getChatInfoById = async (id) => {
   const chatHistory = await db.chat.findFirst({
     where: {
       userId: user.id,
-      id
+      chatId: id,
+    },
+    include: {
+      messages: true,
     }
   });
-  const messages = await db.message.findMany({
-    where: {
-      chatId: chatHistory.id
-    }
-  });
-  return { ...chatHistory, messages };
+  return chatHistory;
 }
 
 export const deleteChatChannel = async (id) => {
@@ -42,11 +41,11 @@ export const deleteChatChannel = async (id) => {
       id
     }
   });
-  await db.message.deleteMany({
-    where: {
-      chatId: id
-    }
-  });
+  // await db.message.deleteMany({
+  //   where: {
+  //     chatId: id
+  //   }
+  // });
   return "success";
 }
 
@@ -65,7 +64,7 @@ export const updateChatChannelTitle = async (req) => {
   return "success";
 }
 
-export const clearChats = async () => {
+export const clearChatHistory = async () => {
   const user = await getUserInfo();
   const chats = await db.chat.findMany({
     where: {
@@ -77,30 +76,47 @@ export const clearChats = async () => {
       userId: user.id
     }
   });
-  await db.message.deleteMany({
-    where: {
-      chatId: { in: chats.map((chat) => chat.id) }
-    }
-  });
+  // await db.message.deleteMany({
+  //   where: {
+  //     chatId: { in: chats.map((chat) => chat.id) }
+  //   }
+  // });
   return "success";
 }
 
-export const saveChat = async (req) => {
+export const saveChatMessage = async (req) => {
   const { id, title, createdAt, path, messages } = req;
   const user = await getUserInfo();
-  const chat = await db.chat.create({
-    data: {
+  let chat = await db.chat.findFirst({
+    where: {
       userId: user.id,
-      id,
-      title,
-      createdAt,
-      path,
-      messages
+      chatId: id,
     }
   });
+
+  if (!chat) {
+    chat = await db.chat.create({
+      data: {
+        userId: user.id,
+        chatId: id,
+        title,
+        createdAt,
+        path,
+      }
+    })
+  }
+  const msgCount = await db.message.count({
+    where: {
+      chatId: chat.id,
+    }
+  });
+  
+  const newMsgs = messages.slice(msgCount, messages.length);
   await db.message.createMany({
-    data: messages.map((message) => ({
-      ...message,
+    data: newMsgs.map((message) => ({
+      role: message.role,
+      name: message.name,
+      content: message.content,
       chatId: chat.id,
     }))
   });

@@ -28,6 +28,7 @@ import AccountCardsSkeleton from '@/components/stocks/account-cards-skeleton'
 import AccountCards from '@/components/stocks/account-cards'
 import AccountDetailSkeleton from '@/components/stocks/account-detail-skeleton'
 import AccountDetail from '@/components/stocks/account-detail'
+import { getChartInfo, getDashboard, getUserInfo } from '@/server/user'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || ''
@@ -42,38 +43,41 @@ async function submitUserMessage(content: string) {
     endDate: new Date().toISOString().split('T')[0]
   };
 
-  const res = await fetch(`/api/user/charts`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`
-    },
-    body: JSON.stringify({ filterDate }),
-    cache: 'force-cache'
-  });
-  const chatData = await res.json();
+  // const res = await fetch(`/api/v1/user/charts`, {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     Authorization: `Bearer ${accessToken}`
+  //   },
+  //   body: JSON.stringify({ filterDate }),
+  //   cache: 'force-cache'
+  // });
+  // const chatData = await res.json();
+  const chatData = await getChartInfo({ filterDate });
 
-  const res2 = await fetch(`/api/user/dashboard`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`
-    },
-    cache: 'force-cache'
-  });
+  // const res2 = await fetch(`/api/v1/user/dashboard`, {
+  //   method: 'GET',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     Authorization: `Bearer ${accessToken}`
+  //   },
+  //   cache: 'force-cache'
+  // });
 
-  const chatData2 = await res2.json();
+  // const chatData2 = await res2.json();
+  const chatData2 = await getDashboard();
 
-  const res3 = await fetch(`/api/user`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`
-    },
-    cache: 'force-cache'
-  });
+  // const res3 = await fetch(`/api/v1/user`, {
+  //   method: 'GET',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     Authorization: `Bearer ${accessToken}`
+  //   },
+  //   cache: 'force-cache'
+  // });
 
-  const chatData3 = await res3.json();
+  // const chatData3 = await res3.json();
+  const chatData3 = await getUserInfo();
 
   const aiState = getMutableAIState<typeof AI>()
 
@@ -362,7 +366,6 @@ export const AI = createAI<AIState, UIState>({
   onGetUIState: async () => {
     'use server'
 
-    // const session = await auth()
     const session = await getFullUserInfo();
 
     if (session) {

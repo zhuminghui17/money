@@ -34,7 +34,7 @@ export function EmptyScreen() {
           .
         </p>
         <br/>
-        <p className="leading-normal">
+        <div className="leading-normal">
         <pre>
           <li>Whats my balance across accounts?</li>
           <li>How much total credit do I have?</li>
@@ -43,7 +43,7 @@ export function EmptyScreen() {
           <li>What are my top expenses?</li>
           <li>Can I afford to buy a car with montly payment of $450?</li>
         </pre>
-        </p>
+        </div>
 			</div>
 		</div>
   )

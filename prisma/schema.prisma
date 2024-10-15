@@ -113,6 +113,7 @@ model Item {
 // Chat model
 model Chat {
   id        String   @id @default(uuid())
+  chatId    String
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   title     String?
@@ -275,7 +276,7 @@ model Message {
   chatId    String
   chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
   role      String
-  name      String
+  name      String?
   content   String
 }
 
