@@ -29,7 +29,6 @@ import {
 } from "@tremor/react";
 import { isEmpty } from "@/utils/util";
 import Modal from "@/components/Basic/Modal";
-// import Checkbox from "@/components/Basic/Checkbox";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
 import apiCall from "@/utils/apiCall";

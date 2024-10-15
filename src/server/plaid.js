@@ -695,31 +695,63 @@ export const item = (next) => {
 };
 
 export const accounts = async (next) => {
-  try {
-    const user = await getUserInfo();
-    const items = await db.item.findMany({
-      where: {
-        userId: user.id,
-      },
-    });
+  const user = await getUserInfo();
+  const items = await db.item.findMany({
+    where: {
+      userId: user.id,
+    },
+  });
 
-    const getAccountAndUpdate = items.map(async (item) => {
-      const accountsResponse = await client.accountsGet({
-        access_token: item.ACCESS_TOKEN,
+  // delete accounts
+  const itemIds = items.map(item => item.id);
+  await db.account.findMany({
+    where: {
+      itemId: { in: itemIds },
+    }
+  });
+
+  const getAccountAndUpdate = items.map(async (item) => {
+    const accountsResponse = await client.accountsGet({
+      access_token: item.ACCESS_TOKEN,
+    });
+    const accounts = accountsResponse.data.accounts;
+    accounts.map(async account => {
+      const balances = await db.balances.create({
+        data: account.balances
       });
-      item.accounts = accountsResponse.data.accounts;
 
-      // Save the updates and return the updated item
-      const updatedItem = await item.save();
-      return updatedItem;
+      await db.account.create({
+        data: {
+          itemId: item.id,
+          account_id: account.account_id,
+          balancesId: balances.id,
+          mask: account.mask,
+          name: account.name,
+          official_name: account.official_name,
+          subtype: account.subtype,
+          type: account.type,
+        }
+      });
     });
+  });
 
-    // Wait for all updates to finish and collect the updated items
-    const updatedItems = await Promise.all(getAccountAndUpdate);
-    return updatedItems;
-  } catch (err) {
-    handleError(err, response);
-  }
+  // Wait for all updates to finish and collect the updated items
+  await Promise.all(getAccountAndUpdate);
+  const updatedItems = await db.item.findMany({
+    where: {
+      userId: user.id,
+    },
+    include: {
+      accounts: {
+        include: {
+          balances: true,
+        },
+      },
+      institution: true,
+    }
+  });
+
+  return updatedItems;
 };
 
 export const getUserAccountInfo = async (access_token) => {
