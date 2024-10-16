@@ -106,7 +106,7 @@ const Browe = () => {
                 index={"date"}
                 showAnimation={true}
                 startEndOnly={true}
-                showTooltip={true}
+                showtooltip={true}
                 connectNulls={true}
                 autoMinValue={true}
                 showGradient={true}

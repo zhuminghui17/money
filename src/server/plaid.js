@@ -190,22 +190,24 @@ export const setAccessToken = async (req) => {
     });
 
     newAccounts.map(async account => {
-      const balances = await db.balances.create({
-        data: account.balances
-      });
-
-      await db.account.create({
+      const newAccount = await db.account.create({
         data: {
           itemId: newItem.id,
           account_id: account.account_id,
-          balancesId: balances.id,
           mask: account.mask,
           name: account.name,
           official_name: account.official_name,
           subtype: account.subtype,
           type: account.type,
         }
-      })
+      });
+
+      await db.balances.create({
+        data: {
+          ...account.balances,
+          accountId: newAccount.id,
+        }
+      });
     })
 
     return {
@@ -289,22 +291,7 @@ export const updateTransactionByItem = async (item, user) => {
 
     // add new transaction
     const addPromises = addedData.map(async (tx) => {
-      const location = await db.location.create({
-        data: tx.location,
-      });
-
-      const payment_meta = await db.paymentMeta.create({
-        data: tx.payment_meta,
-      });
-
-      const personal_finance_category = await db.personalFinanceCategory.create({
-        data: {
-          primary: tx.personal_finance_category.primary,
-          detailed: tx.personal_finance_category.detailed,
-        },
-      });
-
-      await db.transaction.create({
+      const newTx = await db.transaction.create({
         data: {
           userId: user.id,
           name: tx.name,
@@ -336,11 +323,32 @@ export const updateTransactionByItem = async (item, user) => {
           security_id: tx.security_id,
           subtype: tx.subtype,
           type: tx.type,
-          locationId: location.id,
-          paymentMetaId: payment_meta.id,
-          personalFinanceCategoryId: personal_finance_category.id,
         }
       })
+
+      await db.location.create({
+        data: {
+          ...tx.location,
+          transactionId: newTx.id,
+        },
+      });
+
+      await db.paymentMeta.create({
+        data: {
+          ...tx.payment_meta,
+          transactionId: newTx.id,
+        },
+      });
+
+      await db.personalFinanceCategory.create({
+        data: {
+          transactionId: newTx.id,
+          primary: tx.personal_finance_category.primary,
+          detailed: tx.personal_finance_category.detailed,
+        },
+      });
+
+      
     });
     await Promise.all(addPromises);
 
@@ -360,7 +368,7 @@ export const updateTransactionByItem = async (item, user) => {
       // update location
       await db.location.update({
         where: {
-          id: txOrigin.locationId,
+          transactionId: txOrigin.id,
         },
         data: tx.location,
       });
@@ -368,7 +376,7 @@ export const updateTransactionByItem = async (item, user) => {
       // update payment meta
       await db.paymentMeta.update({
         where: {
-          id: txOrigin.paymentMetaId,
+          transactionId: txOrigin.id,
         },
         data: tx.payment_meta
       })
@@ -376,7 +384,7 @@ export const updateTransactionByItem = async (item, user) => {
       // update personal finance category
       await db.personalFinanceCategory.update({
         where: {
-          id: txOrigin.personalFinanceCategoryId,
+          transactionId: txOrigin.id,
         },
         data: {
           primary: tx.personal_finance_category.primary,
@@ -428,41 +436,6 @@ export const updateTransactionByItem = async (item, user) => {
     const removeItemIds = removed.map(
       (removedRecord) => removedRecord.transaction_id
     );
-    const removedTxs = await db.transaction.findMany({
-      where: {
-        userId: user.id,
-        transaction_id: {
-          in: removeItemIds,
-        },
-      }
-    });
-
-    // delete locations
-    await db.location.deleteMany({
-      where: {
-        id: {
-          in: removedTxs.map((tx) => tx.locationId),
-        },
-      },
-    });
-
-    // delete payment meta
-    await db.paymentMeta.deleteMany({
-      where: {
-        id: {
-          in: removedTxs.map((tx) => tx.paymentMetaId),
-        },
-      },
-    });
-
-    // delete personal finance category
-    await db.personalFinanceCategory.deleteMany({
-      where: {
-        id: {
-          in: removedTxs.map((tx) => tx.personalFinanceCategoryId),
-        },
-      },
-    });
 
     // delete transactions
     await db.transaction.deleteMany({
@@ -704,7 +677,7 @@ export const accounts = async (next) => {
 
   // delete accounts
   const itemIds = items.map(item => item.id);
-  await db.account.findMany({
+  await db.account.deleteMany({
     where: {
       itemId: { in: itemIds },
     }
@@ -716,20 +689,22 @@ export const accounts = async (next) => {
     });
     const accounts = accountsResponse.data.accounts;
     accounts.map(async account => {
-      const balances = await db.balances.create({
-        data: account.balances
-      });
-
-      await db.account.create({
+      const newAccount = await db.account.create({
         data: {
           itemId: item.id,
           account_id: account.account_id,
-          balancesId: balances.id,
           mask: account.mask,
           name: account.name,
           official_name: account.official_name,
           subtype: account.subtype,
           type: account.type,
+        }
+      });
+
+      await db.balances.create({
+        data: {
+          ...account.balances,
+          accountId: newAccount.id,
         }
       });
     });

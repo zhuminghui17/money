@@ -62,15 +62,12 @@ model Transaction {
   datetime                DateTime?
   authorized_date         DateTime?
   authorized_datetime     DateTime?
-  locationId              String? @unique
-  location                Location? @relation(fields: [locationId], references: [id])
+  location                Location?
   merchant_name           String?
-  paymentMetaId           String? @unique
-  payment_meta            PaymentMeta? @relation(fields: [paymentMetaId], references: [id])
+  payment_meta            PaymentMeta?
   pending                 Boolean?
   pending_transaction_id  String?
-  personalFinanceCategoryId String? @unique
-  personal_finance_category PersonalFinanceCategory? @relation(fields: [personalFinanceCategoryId], references: [id])
+  personal_finance_category PersonalFinanceCategory?
   transaction_id          String?
   transaction_code        String?
   transaction_type        String?
@@ -99,7 +96,7 @@ model Item {
   id          String   @id @default(uuid())
   userId      String
   user        User     @relation(fields: [userId], references: [id])
-  institutionId String?
+  institutionId String
   institution Institution? @relation(fields: [institutionId], references: [id])
   accounts    Account[]
   cursor      String?
@@ -141,7 +138,8 @@ model Location {
   lat         Float?
   lon         Float?
   store_number String?
-  transaction Transaction?
+  transactionId String @unique
+  transaction Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
 }
 
 // PaymentMeta model
@@ -155,7 +153,8 @@ model PaymentMeta {
   ppd_id            String?
   reason            String?
   reference_number  String?
-  transaction       Transaction?
+  transactionId String @unique
+  transaction       Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
 }
 
 // PersonalFinanceCategory model
@@ -163,7 +162,8 @@ model PersonalFinanceCategory {
   id        String   @id @default(uuid())
   primary   String?
   detailed  String?
-  transaction Transaction?
+  transactionId String @unique
+  transaction Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
 }
 
 // Credit model
@@ -251,6 +251,7 @@ model Institution {
   id              String   @id @default(uuid())
   institution_id  String?
   name            String?
+  itemId          String?
   items           Item[]
 }
 
@@ -260,8 +261,7 @@ model Account {
   itemId                  String
   item                    Item     @relation(fields: [itemId], references: [id])
   account_id              String
-  balancesId              String? @unique
-  balances                Balances? @relation(fields: [balancesId], references: [id])
+  balances                Balances?
   mask                    String?
   name                    String?
   official_name           String?
@@ -354,5 +354,6 @@ model Balances {
   iso_currency_code       String?
   limit                   Float?
   unofficial_currency_code String?
-  account                 Account?
+  accountId               String @unique
+  account                 Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
 }

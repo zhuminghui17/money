@@ -40,7 +40,7 @@ export const userReducer = (state = initialState, { type, payload }) => {
         case SET_USER_INFO:
             return { ...state, ...payload };
         case DELETE_ITEM_BY_ID:
-            const newItems = state.items.filter(item => payload !== item._id);
+            const newItems = state.items.filter(item => payload !== item.id);
             return { ...state, items: newItems };
         case UPDATE_USER_INFO:
             return { ...state, user: { ...state.user, ...payload } };

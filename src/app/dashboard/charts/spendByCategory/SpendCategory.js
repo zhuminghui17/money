@@ -99,7 +99,7 @@ const SpendCategory = ({
                 )}
                 className="mr-4 sm:min-w-full"
                 showAnimation={true}
-                showTooltip={true}
+                showtooltip={true}
             />
         </div>
     )

@@ -1,6 +1,5 @@
 "use server"
 
-import { addAbortListener } from "events";
 import db from "../lib/db";
 import { getUserInfo } from "./auth";
 
@@ -14,6 +13,9 @@ export const getChatInfo = async () => {
   const chatHistory = await db.chat.findMany({
     where: {
       userId: user.id,
+    },
+    include: {
+      messages: true,
     }
   });
   return chatHistory;
@@ -69,6 +71,9 @@ export const clearChatHistory = async () => {
   const chats = await db.chat.findMany({
     where: {
       userId: user.id
+    },
+    include: {
+      messages: true,
     }
   });
   await db.chat.deleteMany({

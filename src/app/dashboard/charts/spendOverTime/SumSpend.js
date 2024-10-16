@@ -95,6 +95,7 @@ const SumSpend = ({
                             left: 12,
                             right: 12,
                         }}
+                        className='w-full'
                     >
                         <CartesianGrid vertical={false} />
                         <XAxis

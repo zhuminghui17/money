@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
-import {
-  clearChatHistory
-} from "../../../../../server/chat";
+import { setUserPayByEmail } from "../../../../../../server/user";
 
-export async function DELETE(req) {
+export async function POST(req) {
   try {
-    const data = await clearChatHistory();
+    const reqInfo = await req.json();
+    const data = await setUserPayByEmail(reqInfo);
     return NextResponse.json(data);
   } catch (err) {
     return NextResponse.json({

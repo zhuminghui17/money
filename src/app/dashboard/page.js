@@ -292,8 +292,8 @@ export default function Dashboard() {
                                 </AccordionHeader>
                                 <AccordionBody>
                                     <List className="mt-4">
-                                        {item.recentTransactions?.map(stock => (
-                                            <ListItem key={stock.name}>
+                                        {item.recentTransactions?.map((stock, index) => (
+                                            <ListItem key={`stock_${index}`}>
                                                 <Text>{stock.name}</Text>
                                                 <Flex justifyContent="end" className="space-x-2">
                                                     <Text>
@@ -386,8 +386,8 @@ export default function Dashboard() {
             <br />
             <br />
             <Grid numItemsSm={3} className="w-full gap-6">
-                {categories.map(item => (
-                    <Card key={item.title}>
+                {categories.map((item, index) => (
+                    <Card key={`category_${index}`}>
                         <Icon variant="light" icon={item.icon} size="sm" color="slate" />
                         <Title className="mt-6">{item.title}</Title>
                         <Text className="mt-2">{item.text}</Text>

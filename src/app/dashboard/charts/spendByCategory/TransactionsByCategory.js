@@ -102,7 +102,7 @@ const TransactionsByCategory = () => {
                 data={chartDataByMonth.slice(0, 10)}
                 className="mt-2 overflow-visible whitespace-normal text-overflow sm:w-full"
                 showAnimation={true}
-                showTooltip={true}
+                showtooltip={true}
             />
             <Flex className="pt-4">
                 <Link

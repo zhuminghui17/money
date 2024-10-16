@@ -320,7 +320,7 @@ export const getAllUsers = async (filter) => {
 
   let queryObj = {};
   if (searchKey.length > 0) {
-    queryObj.$or = [
+    queryObj.OR = [
       { name: { contains: searchKey } },
       { email: { contains: searchKey} },
     ];
@@ -330,7 +330,10 @@ export const getAllUsers = async (filter) => {
     queryObj.isPro = selectedPayStatus === "payed" ? true : false;
   }
 
-  let totalFilteredData = await db.user.findMany({
+  let totalFilteredData = await db.user.count({
+    where: queryObj
+  });
+  let data = await db.user.findMany({
     where: queryObj,
     select: {
       email: 1,

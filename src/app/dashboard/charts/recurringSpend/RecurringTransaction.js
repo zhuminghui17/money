@@ -99,7 +99,7 @@ const RecurringTransaction = () => {
                 <BarList
                     data={barListData.slice(0, 10)}
                     className="mt-2 overflow-visible whitespace-normal text-overflow sm:w-full"
-                    showTooltip={true}
+                    showtooltip={true}
                     showAnimation={true}
                 />
                 <Button

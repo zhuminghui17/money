@@ -314,7 +314,7 @@ export default function Setting() {
                     <TableBody>
                         {items?.map(item => {
                             return item?.accounts?.map((account, index) => (
-                                <TableRow key={account.account_id}>
+                                <TableRow key={`acc_${index}`}>
                                     <TableCell>{index == 0 && item.institution.name}</TableCell>
                                     <TableCell className="text-right">{account.name}</TableCell>
                                     <TableCell className="text-right">{account.type}</TableCell>
@@ -322,7 +322,7 @@ export default function Setting() {
                                     <TableCell className="text-right">
                                         {index == 0 && (
                                             <Icon
-                                                onClick={() => handleDelete(item._id)}
+                                                onClick={() => handleDelete(item.id)}
                                                 className="cursor-pointer"
                                                 icon={TrashIcon}
                                                 color="slate"

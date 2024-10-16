@@ -119,7 +119,11 @@ const MonthlySpend = ({
             </div>
             <div className="mt-8 overflow-auto">
                 <ChartContainer className="mt-5 h-72 w-full" config={chartConfig}>
-                    <BarChart accessibilityLayer data={filterCreditCards === true ? monthlySpendNoCards : monthlySpend}>
+                    <BarChart
+                        accessibilityLayer
+                        data={filterCreditCards === true ? monthlySpendNoCards : monthlySpend}
+                        minWidth={0}
+                    >
                         <CartesianGrid vertical={false} />
                         <XAxis
                             dataKey="date"
