@@ -1,24 +1,11 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import apiCall from "@/utils/apiCall";
+import { getUserInfo, updateUserAccount } from "@/server/user";
 
 export async function getFullUserInfo() {
-    const { accessToken } = await getServerSession(authOptions);
-    const res = await apiCall.get(`/api/auth`, {
-        headers: {
-            Authorization: `Bearer ${accessToken}`
-        }
-    });
-    return res.data;
+    const userInfo = await getUserInfo();
+    return userInfo;
 }
 
 export async function updateUserInfoServerSide(data) {
-    const { accessToken } = await getServerSession(authOptions);
-    await apiCall.post("/api/user", data, {
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${accessToken}`
-        }
-    });
+    const { userInfo } = data;
+    await updateUserAccount(userInfo);
 }

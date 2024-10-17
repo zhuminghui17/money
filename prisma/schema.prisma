@@ -39,7 +39,6 @@ model User {
   subscription   String?
   createdAt      DateTime @default(now())
   transactions   Transaction[]
-  liabilities    Liabilities[]
   items          Item[]
   chats          Chat[]
 }
@@ -79,16 +78,6 @@ model Transaction {
   security_id             String?
   subtype                 String?
   type                    String?
-}
-
-// Liabilities model
-model Liabilities {
-  id       String   @id @default(uuid())
-  userId   String
-  user     User     @relation(fields: [userId], references: [id])
-  credit   Credit[]
-  mortgage Mortgage[]
-  student  Student[]
 }
 
 // Item model
@@ -166,86 +155,6 @@ model PersonalFinanceCategory {
   transaction Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
 }
 
-// Credit model
-model Credit {
-  id                      String   @id @default(uuid())
-  liabilitiesId           String
-  liabilities             Liabilities @relation(fields: [liabilitiesId], references: [id])
-  account_id              String
-  aprs                    Apr[]
-  is_overdue              Boolean?
-  last_payment_amount     Float?
-  last_payment_date       DateTime?
-  last_statement_issue_date DateTime?
-  last_statement_balance  Float?
-  minimum_payment_amount  Float?
-  next_payment_due_date   DateTime?
-}
-
-// Mortgage model
-model Mortgage {
-  id                      String   @id @default(uuid())
-  liabilitiesId           String
-  liabilities             Liabilities @relation(fields: [liabilitiesId], references: [id])
-  account_id              String
-  account_number          String?
-  current_late_fee        Float?
-  escrow_balance          Float?
-  has_pmi                 Boolean?
-  has_prepayment_penalty  Boolean?
-  interest_rateId         String? @unique
-  interest_rate           InterestRate? @relation(fields: [interest_rateId], references: [id])
-  last_payment_amount     Float?
-  last_payment_date       DateTime?
-  loan_term               String?
-  loan_type_description   String?
-  maturity_date           DateTime?
-  next_monthly_payment    Float?
-  next_payment_due_date   DateTime?
-  origination_date        DateTime?
-  origination_principal_amount Float?
-  past_due_amount         Float?
-  property_addressId      String? @unique
-  property_address        PropertyAddress? @relation(fields: [property_addressId], references: [id])
-  ytd_interest_paid       Float?
-  ytd_principal_paid      Float?
-}
-
-// Student model
-model Student {
-  id                      String   @id @default(uuid())
-  liabilitiesId           String
-  liabilities             Liabilities @relation(fields: [liabilitiesId], references: [id])
-  account_id              String
-  account_number          String?
-  disbursement_dates      DateTime[]
-  expected_payoff_date    DateTime?
-  guarantor               String?
-  interest_rate_percentage Float?
-  is_overdue              Boolean?
-  last_payment_amount     Float?
-  last_payment_date       DateTime?
-  last_statement_issue_date DateTime?
-  loan_name               String?
-  loan_statusId           String? @unique
-  loan_status             LoanStatus? @relation(fields: [loan_statusId], references: [id])
-  minimum_payment_amount  Float?
-  next_payment_due_date   DateTime?
-  origination_date        DateTime?
-  origination_principal_amount Float?
-  outstanding_interest_amount Float?
-  payment_reference_number String?
-  pslf_statusId           String? @unique
-  pslf_status             PSLFStatus? @relation(fields: [pslf_statusId], references: [id])
-  repayment_planId        String? @unique
-  repayment_plan          RepaymentPlan? @relation(fields: [repayment_planId], references: [id])
-  sequence_number         String?
-  servicer_addressId      String? @unique
-  servicer_address        ServicerAddress? @relation(fields: [servicer_addressId], references: [id])
-  ytd_interest_paid       Float?
-  ytd_principal_paid      Float?
-}
-
 // Institution model
 model Institution {
   id              String   @id @default(uuid())
@@ -259,8 +168,8 @@ model Institution {
 model Account {
   id                      String   @id @default(uuid())
   itemId                  String
-  item                    Item     @relation(fields: [itemId], references: [id])
-  account_id              String
+  item                    Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  account_id              String   @unique
   balances                Balances?
   mask                    String?
   name                    String?
@@ -278,72 +187,6 @@ model Message {
   role      String
   name      String?
   content   String
-}
-
-// Apr model
-model Apr {
-  id                      String   @id @default(uuid())
-  creditId                String
-  credit                  Credit   @relation(fields: [creditId], references: [id])
-  apr_percentage          Float?
-  apr_type                String?
-  balance_subject_to_apr  Float?
-  interest_charge_amount  Float?
-}
-
-// InterestRate model
-model InterestRate {
-  id          String   @id @default(uuid())
-  percentage  Float?
-  type        String?
-  mortgage    Mortgage?
-}
-
-// PropertyAddress model
-model PropertyAddress {
-  id          String   @id @default(uuid())
-  city        String?
-  country     String?
-  postal_code String?
-  region      String?
-  street      String?
-  mortgage    Mortgage?
-}
-
-// LoanStatus model
-model LoanStatus {
-  id          String   @id @default(uuid())
-  end_date    DateTime?
-  type        String?
-  student     Student?
-}
-
-// PSLFStatus model
-model PSLFStatus {
-  id                      String   @id @default(uuid())
-  estimated_eligibility_date DateTime?
-  payments_made           Int?
-  payments_remaining      Int?
-  student                 Student?
-}
-
-// RepaymentPlan model
-model RepaymentPlan {
-  id          String   @id @default(uuid())
-  description String?
-  type        String?
-  student     Student?
-}
-
-// ServicerAddress model
-model ServicerAddress {
-  id          String   @id @default(uuid())
-  city        String?
-  country     String?
-  postal_code String?
-  region      String?
-  street      String?
-  student     Student?
 }
 
 // Balances model

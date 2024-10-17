@@ -1,7 +1,4 @@
 import { stripe } from "@/lib/stripe";
-import apiCall from "@/utils/apiCall";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import UseUpdateSession from "@/hooks/useUpdateSession";
 import { updateUserInfoServerSide } from "@/app/actions/user";

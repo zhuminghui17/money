@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import {
   getUserInfo,
-  updateUserAccount
+  updateUserAccount,
+  deleteUserAccount,
 } from "../../../../server/user";
 
 export async function GET(req) {
@@ -32,3 +33,14 @@ export async function POST(req) {
   }
 }
 
+export async function DELETE(req) {
+  try {
+    const data = await deleteUserAccount();
+    return NextResponse.json(data);
+  } catch (err) {
+    return NextResponse.json({
+      message: err.message,
+      status: 500,
+    });
+  }
+}

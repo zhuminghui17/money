@@ -11,7 +11,6 @@ import {
 } from "../constants/userConstants";
 import { handleError, isEmpty } from "@/utils/util";
 import { toast } from "react-hot-toast";
-import { setPlaidState } from "./usePlaid";
 import { allTransactionSync } from "@/store/actions/useTransaction";
 
 export const getUserInfo = data => async dispatch => {

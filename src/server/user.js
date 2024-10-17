@@ -85,34 +85,19 @@ export const deleteItemInfoById = async (id) => {
 
 export const deleteUserAccount = async () => {
   const user = await getUserSession();
-  await db.user.delete({
-    where: {
-      id: user.id
-    }
-  });
-  const items = await db.item.findMany({
-    where: {
-      userId: user.id
-    },
-    include: {
-      accounts: true
-    }
-  });
-  const accountIds = items.flatMap(item => item.accounts.map(account => account.id));
   await db.transaction.deleteMany({
     where: {
       userId: user.id,
-      account_id: { in: accountIds }
-    }
-  });
-  await db.account.deleteMany({
-    where: {
-      id: { in: accountIds }
     }
   });
   await db.item.deleteMany({
     where: {
       userId: user.id
+    }
+  });
+  await db.user.delete({
+    where: {
+      id: user.id
     }
   });
   return "User account deleted successfully";

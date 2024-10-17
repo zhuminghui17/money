@@ -673,58 +673,97 @@ export const accounts = async (next) => {
     where: {
       userId: user.id,
     },
-  });
-
-  // delete accounts
-  const itemIds = items.map(item => item.id);
-  await db.account.deleteMany({
-    where: {
-      itemId: { in: itemIds },
-    }
+    include: {
+      institution: true, // Include related accounts if needed
+    },
   });
 
   const getAccountAndUpdate = items.map(async (item) => {
     const accountsResponse = await client.accountsGet({
       access_token: item.ACCESS_TOKEN,
     });
-    const accounts = accountsResponse.data.accounts;
-    accounts.map(async account => {
-      const newAccount = await db.account.create({
-        data: {
+
+    const curAccounts = accountsResponse.data.accounts;
+
+    const updateAccounts = curAccounts.map(async (acc) => {
+      const originAccount = await db.account.findFirst({
+        where: {
           itemId: item.id,
-          account_id: account.account_id,
-          mask: account.mask,
-          name: account.name,
-          official_name: account.official_name,
-          subtype: account.subtype,
-          type: account.type,
+          account_id: acc.account_id,
         }
       });
 
-      await db.balances.create({
-        data: {
-          ...account.balances,
-          accountId: newAccount.id,
-        }
-      });
+      if (originAccount) {
+        const updatedAcc = await db.account.update({
+          where: {
+            id: originAccount.id,
+          },
+          data: {
+            mask: acc.mask,
+            name: acc.name,
+            official_name: acc.official_name,
+            subtype: acc.subtype,
+            type: acc.type,
+            persistent_account_id: acc.persistent_account_id,
+          },
+        });
+        const updatedBalances = await db.balances.update({
+          where: {
+            accountId: originAccount.id
+          },
+          data: {
+            current: acc.balances.current,
+            available: acc.balances.available,
+            iso_currency_code: acc.balances.iso_currency_code,
+            unofficial_currency_code: acc.balances.unofficial_currency_code,
+          }
+        });
+
+        return {
+          ...updatedAcc,
+          balances: updatedBalances
+        };
+      }
+      else {
+        const newAcc = await db.account.create({
+          data: {
+            itemId: item.id,
+            account_id: acc.account_id,
+            mask: acc.mask,
+            name: acc.name,
+            official_name: acc.official_name,
+            subtype: acc.Subtype,
+            type: acc.type,
+            persistent_account_id: acc.persistent_account_id,
+          }
+        });
+        const newBalances = await db.balances.create({
+          data: {
+            accountId: newAcc.id,
+            current: acc.balances.current,
+            available: acc.balances.available,
+            iso_currency_code: acc.balances.iso_currency_code,
+            unofficial_currency_code: acc.balances.unofficial_currency_code,
+          }
+        });
+
+        return {
+          ...newAcc,
+          balances: newBalances,
+        };
+      }
     });
+
+    const updatedAccounts = await Promise.all(updateAccounts);
+
+    return {
+      ...item,
+      accounts: updatedAccounts,
+    }
   });
 
   // Wait for all updates to finish and collect the updated items
-  await Promise.all(getAccountAndUpdate);
-  const updatedItems = await db.item.findMany({
-    where: {
-      userId: user.id,
-    },
-    include: {
-      accounts: {
-        include: {
-          balances: true,
-        },
-      },
-      institution: true,
-    }
-  });
+  const updatedItems = await Promise.all(getAccountAndUpdate);
 
   return updatedItems;
 };

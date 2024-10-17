@@ -4,45 +4,27 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     ArrowNarrowRightIcon,
-    TrendingDownIcon,
-    TrendingUpIcon,
     CreditCardIcon,
     CheckCircleIcon,
     ChatAlt2Icon,
-    CollectionIcon,
     ShieldCheckIcon,
-    ShoppingBagIcon,
     CashIcon,
     LockOpenIcon,
-    UsersIcon,
-    InformationCircleIcon,
-    ShoppingCartIcon
 } from "@heroicons/react/solid";
-import { isEmpty } from "@/utils/util";
 import { getDashboardData, setUserDashboardAISummary } from "@/store/actions/useUser";
-import { ViewListIcon, CurrencyDollarIcon, ChartPieIcon } from "@heroicons/react/outline";
+import { CurrencyDollarIcon } from "@heroicons/react/outline";
 import { Accordion, AccordionHeader, AccordionBody, AccordionList, BarList } from "@tremor/react";
 import {
-    BadgeDelta,
     Button,
-    Bold,
-    Callout,
     Card,
     CategoryBar,
     Divider,
     Grid,
-    DonutChart,
     Flex,
     Icon,
-    Legend,
     List,
     ListItem,
-    MarkerBar,
     Metric,
-    ProgressBar,
-    TabGroup,
-    Tab,
-    TabList,
     Text,
     Title
 } from "@tremor/react";
