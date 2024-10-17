@@ -311,7 +311,7 @@ export default function Dashboard() {
             <br />
             {dashboardSummary?.length > 10 ? (
                 <>
-                    {convertItemsToAccounts(items, accounts_info).length > 2 ? (
+                    {convertItemsToAccounts(items, accounts_info).length >= 2 ? (
                         <AccordionList className="w-full mt-2">
                             <Accordion defaultOpen={true}>
                                 <AccordionHeader>

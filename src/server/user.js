@@ -47,7 +47,14 @@ export const updateUserAccount = async (userInfo) => {
       id: user.id
     },
     data: {
-      ...userInfo
+      given_name: userInfo.given_name,
+      country: userInfo.country,
+      state: userInfo.state,
+      city: userInfo.city,
+      salary: userInfo.salary,
+      date: userInfo.date,
+      phone: userInfo.phone,
+      twilioToken: userInfo.twilioToken,
     }
   });
   return "User account updated successfully";
@@ -757,7 +764,7 @@ const getDonutAsBarData = async (filteredTxs, totalCountData) => {
   );
 
   const groupedData = filteredTransactions.reduce((acc, transaction) => {
-    const category = transaction.category;
+    const category = transaction.category[transaction.category.length - 1];
 
     if (!acc[category]) {
       acc[category] = {

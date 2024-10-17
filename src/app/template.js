@@ -2,7 +2,7 @@
 
 import store from "../store";
 import { SessionProvider } from "next-auth/react";
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "@/components/providers";
 

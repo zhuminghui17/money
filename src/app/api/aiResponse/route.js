@@ -21,7 +21,7 @@ async function GPT4(info, key) {
 
     const chat_res = await openai.chat.completions.create({
         // You need early access to GPT-4, otherwise use "gpt-3.5-turbo"
-        model: "gpt-4-turbo-preview",
+        model: "gpt-4o",
         messages: GPT4Message,
         temperature: .5,
         max_tokens: 1000,

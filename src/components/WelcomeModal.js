@@ -5,10 +5,9 @@ import { Transition } from "@headlessui/react";
 import { useSession } from "next-auth/react";
 import { useDispatch } from "react-redux";
 import { updateUserInfo } from "@/store/actions/useUser";
-import { Flex, Metric, TextInput, Text, Button, AccordionList, Accordion, AccordionBody, AccordionHeader} from "@tremor/react";
+import { Flex, TextInput, Text, Button } from "@tremor/react";
 import { isEmpty } from "@/utils/util";
 import toast from "react-hot-toast";
-import Link from "next/link";
 
 const WelcomeModal = () => {
     const dispatch = useDispatch();
@@ -16,7 +15,11 @@ const WelcomeModal = () => {
     const [moving, setMoving] = useState("right");
     const { data: session, update: sessionUpdate } = useSession();
     // set userInfo object and default database URL. Replace with your own database URL
-    const [userInfo, setUserInfo] = useState({openAiKey:"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", mongoDBURL: "mongodb+srv://db:SrZJK2asnUlmiE7y@qashboard.ftpcnz0.mongodb.net/?retryWrites=true&w=majority"});
+    const [userInfo, setUserInfo] = useState({
+        openAiKey:"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",
+        mongoDBURL: "mongodb+srv://db:SrZJK2asnUlmiE7y@qashboard.ftpcnz0.mongodb.net/?retryWrites=true&w=majority",
+        isNewUser: false,
+    });
     const [isAccordionOpen, setIsAccordionOpen] = useState(false);
 
     const [steps, setSteps] = useState([
