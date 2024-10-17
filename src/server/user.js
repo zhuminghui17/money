@@ -33,7 +33,6 @@ export const getUserInfo = async () => {
     },
   });
 
-  delete userInfo.twilioToken;
   return {
     user: userInfo,
     items
@@ -51,8 +50,8 @@ export const updateUserAccount = async (userInfo) => {
       country: userInfo.country,
       state: userInfo.state,
       city: userInfo.city,
-      salary: userInfo.salary,
-      date: userInfo.date,
+      salary: parseFloat(userInfo.salary),
+      payday: parseInt(userInfo.payday),
       phone: userInfo.phone,
       twilioToken: userInfo.twilioToken,
     }
@@ -70,7 +69,7 @@ export const deleteItemInfoById = async (id) => {
       accounts: true
     }
   });
-  const accountIds = item.accounts.map(account => account.id);
+  const accountIds = item.accounts.map(account => account.account_id);
   await db.transaction.deleteMany({
     where: {
       userId: user.id,

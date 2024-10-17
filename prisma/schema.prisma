@@ -101,7 +101,7 @@ model Chat {
   id        String   @id @default(uuid())
   chatId    String
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title     String?
   messages  Message[]
   path      String?

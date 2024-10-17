@@ -19,7 +19,7 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    const { userInfo } = req.body;
+    const { userInfo } = await req.json();
     await updateUserAccount(userInfo);
     return NextResponse.json({
       message: "User account updated successfully",

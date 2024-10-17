@@ -2,9 +2,9 @@
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserInfo, deleteItemInfoById, updateUserInfo } from "@/store/actions/useUser";
+import { deleteItemInfoById, updateUserInfo } from "@/store/actions/useUser";
 import { CurrencyDollarIcon, InformationCircleIcon, TrashIcon, CalendarIcon } from "@heroicons/react/solid";
 import { countries } from "countries-list";
 import {
@@ -65,7 +65,7 @@ export default function Setting() {
 
     const setSalaryDate = payday => {
         const temp = parseInt(payday);
-        if (!isEmpty(payday) && temp > 0 && temp < 32) setUserInfo({ ...userInfo, date: String(temp) });
+        if (!isEmpty(payday) && temp > 0 && temp < 32) setUserInfo({ ...userInfo, payday: String(temp) });
     };
 
     const handleDeleteAccount = () => {
@@ -178,7 +178,7 @@ export default function Setting() {
                                 min={1}
                                 enableStepper={false}
                                 onValueChange={setSalaryDate}
-                                value={userInfo?.date ?? ""}
+                                value={userInfo?.payday ?? ""}
                             />
                         </div>
                     </Flex>
