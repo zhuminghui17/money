@@ -54,6 +54,8 @@ export const updateUserAccount = async (userInfo) => {
       payday: parseInt(userInfo.payday),
       phone: userInfo.phone,
       twilioToken: userInfo.twilioToken,
+      isPro: userInfo.isPro,
+      subscription: userInfo.subscription,
     }
   });
   return "User account updated successfully";
