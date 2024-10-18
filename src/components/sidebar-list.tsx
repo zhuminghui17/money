@@ -1,8 +1,8 @@
 import { clearChats, getChats } from '@/app/actions/chat'
 import { ClearHistory } from '@/components/clear-history'
 import { SidebarItems } from '@/components/sidebar-items'
-import { ThemeToggle } from '@/components/theme-toggle'
 import { cache } from 'react'
+import { type Chat } from '@/lib/types'
 
 interface SidebarListProps {
   userId?: string
@@ -14,7 +14,7 @@ const loadChats = cache(async (userId?: string) => {
 })
 
 export async function SidebarList({ userId }: SidebarListProps) {
-  const chats = await loadChats(userId)
+  const chats = await loadChats(userId);
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
@@ -30,7 +30,6 @@ export async function SidebarList({ userId }: SidebarListProps) {
         )}
       </div>
       <div className="flex items-center justify-end p-4">
-        {/* <ThemeToggle /> */}
         <ClearHistory clearChats={clearChats} isEnabled={chats?.length > 0} />
       </div>
     </div>

@@ -42,7 +42,7 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
     if (messagesLength === 2) {
       setTimeout(() => {
         router.refresh()
-      }, 1000)
+      }, 4000)
     }
   }, [aiState.messages, router])
 

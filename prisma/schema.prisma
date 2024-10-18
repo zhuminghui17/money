@@ -103,7 +103,7 @@ model Chat {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title     String?
-  messages  Message[]
+  messages  String?
   path      String?
   createdAt DateTime?
 }
@@ -177,16 +177,6 @@ model Account {
   subtype                 String?
   type                    String?
   persistent_account_id   String?
-}
-
-// Message model
-model Message {
-  id        String   @id @default(uuid())
-  chatId    String
-  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  role      String
-  name      String?
-  content   String
 }
 
 // Balances model

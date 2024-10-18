@@ -6,10 +6,6 @@ import { UserSession } from '@/lib/types'
 import { getMissingKeys } from '@/app/actions/chat';
 import { getFullUserInfo } from '@/app/actions/auth';
 
-export const metadata = {
-  title: 'Next.js AI Chatbot'
-}
-
 export default async function IndexPage() {
   const id = nanoid()
   // const session = await auth()
