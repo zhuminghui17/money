@@ -1,6 +1,9 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import {
+  revalidatePath,
+  unstable_noStore as noStore
+} from 'next/cache'
 import { redirect } from 'next/navigation'
 import { type Chat } from '@/lib/types'
 import { getFullUserInfo } from './auth'
@@ -23,6 +26,7 @@ export async function getChats(userId?: string | null) {
 }
 
 export async function getChat(id: string, userId: string) {
+  noStore()
   const result = await getChatInfoById(id)
   const chat = result as Chat;
 
