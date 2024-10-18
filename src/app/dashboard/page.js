@@ -165,7 +165,6 @@ export default function Dashboard() {
     const convertedItems = useMemo(() => convertItemsToAccounts(items, accounts_info), [items, accounts_info]);
 
     const AccountCards = ({ items }) => {
-        console.log(items)
         return items.map((item, index) => (
             <AccordionList key={index}>
                 <Accordion className="w-full">
