@@ -7,12 +7,9 @@ import {
     Title,
     Text,
     TextInput,
-    DonutChart,
-    Legend,
 } from "@tremor/react";
 import { Label, Pie, PieChart } from "recharts";
 import {
-    ChartConfig,
     ChartContainer,
     ChartTooltip,
     ChartTooltipContent,

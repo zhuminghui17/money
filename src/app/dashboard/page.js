@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     ArrowNarrowRightIcon,
@@ -13,7 +13,6 @@ import {
 } from "@heroicons/react/solid";
 import { getDashboardData, setUserDashboardAISummary } from "@/store/actions/useUser";
 import { CurrencyDollarIcon } from "@heroicons/react/outline";
-import { Accordion, AccordionHeader, AccordionBody, AccordionList, BarList } from "@tremor/react";
 import {
     Button,
     Card,
@@ -26,7 +25,12 @@ import {
     ListItem,
     Metric,
     Text,
-    Title
+    Title,
+    Accordion,
+    AccordionHeader,
+    AccordionBody,
+    AccordionList,
+    BarList,
 } from "@tremor/react";
 import Link from "next/link";
 import { getAIResponse } from "@/hooks/actions";
@@ -61,10 +65,7 @@ const convertItemsToAccounts = (items, accounts_info) => {
                 limit,
                 unofficial_currency_code,
                 recentTransactions: accounts_info[account.account_id]?.recentTransactions,
-                topSpendCategories: accounts_info[account.account_id]?.topCategories?.categories?.map(item => ({
-                    name: item.category,
-                    value: item.sum
-                }))
+                topSpendCategories: accounts_info[account.account_id]?.topCategories,
             };
         });
 
@@ -77,7 +78,6 @@ export default function Dashboard() {
     const { kpis, items, accounts_info, dashboardSummary } = useSelector(state => state.user);
     const { isTransactionsLoaded } = useSelector(state => state.plaid);
 
-    const [aiResponse, setAiResponse] = useState("");
     const [isDataReady, setIsDataReady] = useState(false);
     const hasMadeApiCall = useRef(false);
 
@@ -162,8 +162,11 @@ export default function Dashboard() {
         }
     ];
 
-    const AccountCards = ({ items, accounts_info }) => {
-        return convertItemsToAccounts(items, accounts_info).map((item, index) => (
+    const convertedItems = useMemo(() => convertItemsToAccounts(items, accounts_info), [items, accounts_info]);
+
+    const AccountCards = ({ items }) => {
+        console.log(items)
+        return items.map((item, index) => (
             <AccordionList key={index}>
                 <Accordion className="w-full">
                     <AccordionHeader>
@@ -250,12 +253,12 @@ export default function Dashboard() {
                                         <Text>Top Spend Categories</Text>
                                     </Flex>
                                 </AccordionHeader>
-                                <AccordionBody>
+                                <AccordionBody className="w-full">
                                     <BarList
                                         data={item.topSpendCategories}
                                         showAnimation={false}
                                         valueFormatter={valueFormatter}
-                                        className="mt-2"
+                                        className="mt-2 !w-full"
                                     />
                                 </AccordionBody>
                             </Accordion>
@@ -311,7 +314,7 @@ export default function Dashboard() {
             <br />
             {dashboardSummary?.length > 10 ? (
                 <>
-                    {convertItemsToAccounts(items, accounts_info).length >= 2 ? (
+                    {convertedItems.length >= 2 ? (
                         <AccordionList className="w-full mt-2">
                             <Accordion defaultOpen={true}>
                                 <AccordionHeader>
@@ -355,7 +358,7 @@ export default function Dashboard() {
             </div>
             <br />
             <div className="w-full">
-                <AccountCards items={items} accounts_info={accounts_info} />
+                <AccountCards items={convertedItems} />
             </div>
             <Flex className="pt-4 mt-6 border-t">
                 <Button size="xs" variant="light" icon={ArrowNarrowRightIcon} iconPosition="right" color="slate">

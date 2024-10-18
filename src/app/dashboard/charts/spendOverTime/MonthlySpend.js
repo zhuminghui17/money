@@ -84,7 +84,7 @@ const MonthlySpend = ({
             averageMonthlyMoneyIn,
             avgTransaction
         };
-    }, [monthlySpendNoCards, monthlySpend]);
+    }, [monthlySpendNoCards, monthlySpend, filterCreditCards]);
 
     const { averageMonthlySpend, avgTransaction } = calculatedAveragesMonthly;
 

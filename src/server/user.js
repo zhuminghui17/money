@@ -223,8 +223,8 @@ export const getDashboard = async () => {
     }, {});
 
     const topCategories = Object.entries(categorySums)
-      .map(([category, sum]) => ({ category, sum }))
-      .sort((a, b) => b.sum - a.sum)
+      .map(([category, sum]) => ({ name: category, value: sum }))
+      .sort((a, b) => b.value - a.value)
       .slice(0, 5);
 
     return {

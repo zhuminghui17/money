@@ -53,11 +53,19 @@ export const getTransaction = async (filter) => {
   }
 
   if (selectedCategories.length > 0) {
-    query.category = { in: selectedCategories };
+    query.OR = selectedCategories.map(category => ({
+      category: {
+        has: category,
+      },
+    }));
   }
 
   if (selectedFinCategories.length > 0) {
-    query.personal_finance_category.primary = { in: selectedCategories };
+    query.personal_finance_category = {
+      primary: {
+        in: selectedFinCategories,
+      }
+    }
   }
 
   const totalFilteredData = await db.transaction.count({
