@@ -6,7 +6,13 @@ import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "@/components/providers";
 
-export default function Template({ children }) {
+import { ReactNode } from "react";
+
+interface TemplateProps {
+    children: ReactNode;
+}
+
+export default function Template({ children }: TemplateProps) {
     return (
         <SessionProvider>
             <Provider store={store}>

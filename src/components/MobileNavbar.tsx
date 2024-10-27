@@ -12,7 +12,7 @@ import WelcomeModal from "./WelcomeModal";
 import { usePathname } from "next/navigation";
 
 const Navbar = () => {
-    const { isTransactionsLoaded } = useSelector(state => state.plaid);
+    const { isTransactionsLoaded } = useSelector((state: { plaid: { isTransactionsLoaded: boolean } }) => state.plaid);
 
     const pathname = usePathname();
 

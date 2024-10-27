@@ -1,5 +1,10 @@
 import "./globals.css";
 import { agbalumo, inter } from "@/lib/fonts";
+import { ReactNode } from 'react';
+
+interface RootLayoutProps {
+    children: ReactNode;
+}
 
 export const metadata = {
     description:
@@ -10,7 +15,7 @@ export const metadata = {
     }
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: RootLayoutProps) {
     return (
         <html lang="en" className={`${agbalumo.variable} ${inter.variable} mb-12 sm:mb-0`} suppressHydrationWarning>
             {children}

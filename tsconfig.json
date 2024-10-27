@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "tailwind.config.js", "src/lib/auth.js", "src/components/stocks/*.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "tailwind.config.js", "src/lib/auth.js", "src/components/stocks/*.jsx", "src/components/Navbar.tsx", "src/app/dashboard/page.tsx"],
   "exclude": ["node_modules"]
 }

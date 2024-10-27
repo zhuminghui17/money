@@ -10,9 +10,10 @@ import useGetAccounts from "@/hooks/useGetAccounts";
 import { getUserInfo } from "@/store/actions/useUser";
 import WelcomeModal from "./WelcomeModal";
 import { usePathname } from "next/navigation";
+import { Landmark } from "lucide-react";
 
 const Navbar = () => {
-    const { isTransactionsLoaded } = useSelector(state => state.plaid);
+    const { isTransactionsLoaded } = useSelector((state: { plaid: { isTransactionsLoaded: boolean } }) => state.plaid);
 
     const dispatch = useDispatch();
     const pathname = usePathname();
@@ -23,16 +24,16 @@ const Navbar = () => {
             href: "/dashboard"
         },
         {
+            label: "Analyze",
+            href: "/dashboard/charts"
+        },
+        {
             label: "Chat",
             href: "/dashboard/chat"
         },
         {
-            label: "Explore",
+            label: "Browse",
             href: "/dashboard/transaction"
-        },
-        {
-            label: "Analyze",
-            href: "/dashboard/charts"
         }
     ];
 
@@ -40,7 +41,7 @@ const Navbar = () => {
     useGetTransactionsSync();
 
     const fetchData = useCallback(() => {
-        dispatch(getUserInfo());
+        dispatch<any>(getUserInfo());
     }, [dispatch]);
 
     useEffect(() => {
@@ -50,14 +51,13 @@ const Navbar = () => {
     return (
         <header className="sticky top-0 z-10 flex w-full h-16 px-4 border-b bg-gradient-to-b from-background/10 via-background/50 to-background/80 backdrop-blur-xl">
             <div className="relative flex items-center justify-between px-4 shadow-2 grow">
-                <div className="flex items-center justify-center my-2 mr-4 font-bold text-black bg-gray-100 rounded-full w-11 h-11">
-                    <img
-                        width={"100%"}
-                        height={"100%"}
-                        src="https://assets-global.website-files.com/652f138fe3158780149d6e3e/6530681bec2b36fea6c68f03_Minimalist%20Orange%20Online%20Link%20Store%20Market%20Logo%20(2).png"
-                    />
+                <div className="flex items-center">
+                    <div className="flex items-center justify-center my-2 mr-4 font-bold text-black bg-gray-100 rounded-full w-11 h-11">
+                        <Landmark />
+                    </div>
+                    <span className="text-center">Plaid AI Dashboard</span>
                 </div>
-                <div className="absolute hidden gap-2 space-x-4 transform -translate-x-1/2 sm:flex left-1/2">
+                <div className="absolute flex gap-2 space-x-4 transform -translate-x-1/2 left-1/2">
                     {navItems.map((item, index) => {
                         return (
                             <li
@@ -112,7 +112,6 @@ const Navbar = () => {
                     </div>
                 </div>
             </div>
-            <WelcomeModal />
         </header>
     );
 };

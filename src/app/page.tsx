@@ -38,8 +38,7 @@ const LoginForm = () => {
                         <div className="flex items-center p-2 mt-6">
                             <Button
                                 onClick={() => signIn("google", { callbackUrl })}
-                                className="flex items-center justify-center w-full gap-2 px-4 py-2 transition duration-150 border rounded-lg border-slate-200 text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow"
-                            >
+                                className="flex items-center justify-center w-full gap-2 px-4 py-2 transition duration-150 border rounded-lg border-slate-200 text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow" type={undefined} disabled={undefined} name={undefined} href={undefined}                            >
                                 <img
                                     className={`${data?.user && "mr-2"} h-8 w-8 rounded-full`}
                                     src={data?.user?.image || "https://www.svgrepo.com/show/475656/google-color.svg"}
