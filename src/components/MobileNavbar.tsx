@@ -8,7 +8,6 @@ import usePlaidInit from "@/hooks/usePlaidInit";
 import useGetTransactionsSync from "@/hooks/useGetTransactionsSync";
 import useGetAccounts from "@/hooks/useGetAccounts";
 import { getUserInfo } from "@/store/actions/useUser";
-import WelcomeModal from "./WelcomeModal";
 import { usePathname } from "next/navigation";
 
 const Navbar = () => {

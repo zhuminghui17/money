@@ -9,22 +9,21 @@ async function GPT4(info, key) {
         {
             role: "system",
             content:
-                "You are personal finance assistant. It's your job to write two short paragraphs containing insights for me to understand my financial position overall. KPIS are live account data and includes the data from last check in. Accounts have all my connected accounts (checkings, credit cards, etc):" +
-                info
+                "You are personal finance assistant. It's your job to write two short paragraphs containing insights for me to understand my financial position overall. KPIS are live account data and includes the data from last check in. Accounts have all my connected accounts (checkings, credit cards, etc)" 
         },
         {
             role: "user",
             content:
-                "Provide insights by not just summarizing account balances but instead, providing meaningful analysis for me to take action and recent insights that affect my current financial position."
+                "Provide insights by not just summarizing account balances but instead, providing meaningful analysis for me to take action and recent insights that affect my current financial position. Include overview of balances, changes and a profile based on my spend." +
+                info
         }
     ];
 
     const chat_res = await openai.chat.completions.create({
-        // You need early access to GPT-4, otherwise use "gpt-3.5-turbo"
         model: "gpt-4o",
         messages: GPT4Message,
         temperature: .5,
-        max_tokens: 1000,
+        max_tokens: 3000,
     });
 
     // const stream = OpenAIStream(chat_res);

@@ -26,7 +26,6 @@ import {
 } from "@/store/actions/useUser";
 import { getDashboardData } from "@/store/actions/useUser";
 import { getAIResponse } from "@/hooks/actions";
-import AccountDetailSkeleton from "@/components/stocks/account-detail-skeleton";
 import MonthlySpend from "./spendOverTime/MonthlySpend";
 import SumSpend from './spendOverTime/SumSpend';
 import TransactionsByCategory from "./spendByCategory/TransactionsByCategory";
@@ -77,7 +76,6 @@ export default function Charts() {
     }, [dispatch, filterDate, selectedAccounts]);
 
     const fetchData = useCallback(async () => {
-        // Notice the async keyword here
         if (isTransactionsLoaded) {
             dispatch(getDashboardData());
             dispatch(getChartsData({ filterDate, selectedAccounts }));
@@ -125,14 +123,11 @@ export default function Charts() {
     };
 
     function calculateAveragesMonthly() {
-        // Initialize sums to 0
         let totalSpend = 0;
         let totalMoneyIn = 0;
         let totalTransactions = 0;
-        // Count the number of months
         let numberOfMonths = filterCreditCards === true ? monthlySpendNoCards?.length : monthlySpend?.length;
 
-        // Iterate through each month's data to sum up the spend and moneyIn values
         for (let i = 0; i < numberOfMonths; i++) {
             if(filterCreditCards === true) {
                 totalSpend += monthlySpendNoCards[i]?.spend;
@@ -146,7 +141,6 @@ export default function Charts() {
             }
         }
 
-        // Calculate the average monthly spend and average monthly moneyIn
         let averageMonthlySpend = totalSpend / numberOfMonths;
         let averageMonthlyMoneyIn = totalMoneyIn / numberOfMonths;
         let avgTransaction = totalTransactions / numberOfMonths;
@@ -171,11 +165,11 @@ export default function Charts() {
     };
 
     return (
-        <main className="min-h-screen p-4 m-auto max-w-7xl">
+        <main className="min-h-screen p-2 m-auto max-w-7xl">
             <div className="items-center block sm:flex">
                 <Datepicker
-                    containerClassName="relative min-w-[15rem] md:mr-2"
-                    inputClassName="w-full text-sm outline-none text-left whitespace-nowrap truncate rounded-tremor-default focus:ring-2 transition duration-100 shadow-tremor-input focus:border-tremor-brand-subtle focus:ring-tremor-brand-muted dark:shadow-dark-tremor-input dark:focus:border-dark-tremor-brand-subtle dark:focus:ring-dark-tremor-brand-muted pl-3 pr-8 py-2 border bg-tremor-background dark:bg-dark-tremor-background hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis border-tremor-border dark:border-dark-tremor-border"
+                    containerClassName="relative min-w-[12rem] md:mr-1"
+                    inputClassName="w-full text-sm outline-none text-left whitespace-nowrap truncate rounded-tremor-default focus:ring-2 transition duration-100 shadow-tremor-input focus:border-tremor-brand-subtle focus:ring-tremor-brand-muted dark:shadow-dark-tremor-input dark:focus:border-dark-tremor-brand-subtle dark:focus:ring-dark-tremor-brand-muted pl-3 pr-6 py-1 border bg-tremor-background dark:bg-dark-tremor-background hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis border-tremor-border dark:border-dark-tremor-border"
                     useRange={true}
                     showShortcuts={true}
                     value={filterDate}
@@ -203,7 +197,7 @@ export default function Charts() {
                     }}
                 />
                 <MultiSelect
-                    className="max-w-sm mt-2 md:mt-0 multiselect"
+                    className="max-w-sm mt-1 md:mt-0 multiselect"
                     onValueChange={handleSetSelectedAccounts}
                     value={selectedAccounts}
                     placeholder="Select Accounts..."
@@ -216,7 +210,7 @@ export default function Charts() {
                         ));
                     })}
                 </MultiSelect>
-                <Select className="max-w-sm mt-2 md:mt-0 ml-2" value={filterCreditCards} onValueChange={setFilterCreditCards}>
+                <Select className="max-w-sm mt-1 md:mt-0 ml-1" value={filterCreditCards} onValueChange={setFilterCreditCards}>
                     <SelectItem value={true} icon={CalculatorIcon}>
                         Yes, filter credit payments out of spend
                     </SelectItem>
@@ -226,29 +220,29 @@ export default function Charts() {
                 </Select>
             </div>
             <br />
-            <Card className="px-4">
+            <Card className="px-2 border border-gray-300">
                 <TabGroup className="">
                     <TabList
                         color="slate"
                         className="justify-center align-items-center w-[calc(100vw_-_theme(spacing.16))] sm:w-full"
                     >
-                        <Tab className="w-full px-0 sm:p-6 justify-center text-center">
+                        <Tab className="w-full px-0 sm:p-4 justify-center text-center">
                             <p className="text-sm break-word sm:text-base whitespace-break-spaces ">Spend over time</p>
                         </Tab>
-                        <Tab className="w-full px-0 sm:p-6 justify-center text-center">
+                        <Tab className="w-full px-0 sm:p-4 justify-center text-center">
                             <p className="text-sm break-word sm:text-base whitespace-break-spaces text-center">Spend by category</p>
                         </Tab>
-                        <Tab className="w-full px-0 sm:p-6 justify-center text-center">
+                        <Tab className="w-full px-0 sm:p-4 justify-center text-center">
                             <p className="text-sm break-word sm:text-base whitespace-break-spaces text-center">
                                 Recurring spend
                             </p>
                         </Tab>
-                        <Tab className="w-full justify-center px-0 sm:p-6" onClick={fetchAiSummary}>
+                        <Tab className="w-full justify-center px-0 sm:p-4" onClick={fetchAiSummary}>
                             <p className="text-sm break-word sm:text-base whitespace-break-spaces text-center">Summary</p>
                         </Tab>
                     </TabList>
                     <TabPanels>
-                        <TabPanel className="px-0 py-6 sm:px-6">
+                        <TabPanel className="px-0 py-4 sm:px-4">
                             <MonthlySpend
                                 selectedKpi={selectedKpi}
                                 selectedIndex={selectedIndex}
@@ -262,21 +256,20 @@ export default function Charts() {
                                 setSelectedIndex={setSelectedIndex}
                                 filterCreditCards={filterCreditCards}
                             />
-                            {/* <AccountDetailSkeleton /> */}
                         </TabPanel>
-                        <TabPanel className="px-0 py-6 sm:px-6">
+                        <TabPanel className="px-0 py-4 sm:px-4">
                             <TopPurchaseCategory />
                             <br />
                             <TransactionsByCategory />
                         </TabPanel>
-                        <TabPanel className="px-0 py-6 sm:px-6">
+                        <TabPanel className="px-0 py-4 sm:px-4">
                             <SpendByChannel />
                             <br />
                             <RecurringTransaction />
                         </TabPanel>
                         <TabPanel>
                             <br />
-                            <Text className="mt-2">AI generated summary</Text>
+                            <Text className="mt-1">AI generated summary</Text>
                             <br />
                             <Summary />
                         </TabPanel>

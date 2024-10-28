@@ -10,6 +10,7 @@ import {
   ChatAlt2Icon,
   CashIcon,
   PhoneIncomingIcon,
+  CheckCircleIcon
 } from "@heroicons/react/solid";
 import { getDashboardData, setUserDashboardAISummary } from "@/store/actions/useUser";
 import { CurrencyDollarIcon } from "@heroicons/react/outline";
@@ -39,6 +40,7 @@ import Link from "next/link";
 import { getAIResponse } from "@/hooks/actions";
 import { agbalumo } from "@/lib/fonts";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import ConnectButtonModal from "@/components/FullConnectButton";
 
 interface KPI {
   title: string;
@@ -333,91 +335,101 @@ export default function Dashboard() {
 
   return (
     <main className="min-h-screen p-4 m-auto max-w-7xl">
-      <Grid numItemsSm={3} numItemsLg={3} className="gap-6">
-        {kpis?.map((item, index) => (
-          <Card key={index}>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-lg font-medium">
-              {item.title}
-            </CardTitle>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="h-4 w-4 text-muted-foreground"
-            >
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-            </svg>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold"><Metric className={agbalumo.className}>${usNumberformatter(item.metric)}</Metric></div>
-            {/* <p className="text-xs text-muted-foreground">
-            &nbsp; ${usNumberformatter(item.metricPrev)}
-            </p> */}
-          </CardContent>
-        </Card>
-        ))}
-      </Grid>
-
-      <br />
-      {dashboardSummary?.length > 10 ? (
+      {convertedItems && convertedItems.length > 0 ? (
         <>
-          {convertedItems.length >= 2 ? (
-            <Accordion type="single" collapsible className="w-full mt-2" defaultValue="account-summary">
-            <AccordionItem value="account-summary">
-              <AccordionTrigger>
-                <Text>View account summary</Text>
-              </AccordionTrigger>
-              <AccordionContent>
-                <Flex justifyContent="start">
-                  <Icon variant="light" icon={CashIcon} size="sm" className="mr-4" />
-                  <Title>Check-in summary:</Title>
-                </Flex>
-                <br />
-                <pre className="max-w-full overflow-x-auto font-sans whitespace-pre-wrap">
-                  <Text>{dashboardSummary}</Text>
-                </pre>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>          
-          ) : null}
+          <Grid numItemsSm={3} numItemsLg={3} className="gap-6">
+            {kpis?.map((item, index) => (
+              <Card key={index}>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-lg font-medium">
+                    {item.title}
+                  </CardTitle>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    className="h-4 w-4 text-muted-foreground"
+                  >
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                  </svg>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    <Metric className={agbalumo.className}>${usNumberformatter(item.metric)}</Metric>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </Grid>
+          <div className="mt-4">
+            {dashboardSummary?.length > 10 ? (
+              convertedItems.length >= 2 ? (
+                <Accordion type="single" collapsible className="w-full mt-2" defaultValue="account-summary">
+                  <AccordionItem value="account-summary">
+                    <AccordionTrigger>
+                      <Text>View account summary</Text>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <Flex justifyContent="start">
+                        <Icon variant="light" icon={CashIcon} size="sm" className="mr-4" />
+                        <Title>Check-in summary:</Title>
+                      </Flex>
+                      <div className="mt-4">
+                        <pre className="max-w-full overflow-x-auto font-sans whitespace-pre-wrap">
+                          <Text>{dashboardSummary}</Text>
+                        </pre>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              ) : null
+            ) : (
+              <Text>Analyzing recent activity... </Text>
+            )}
+          </div>
         </>
-      ) : (
-        <Text>Analyzing recent activity... </Text>
-      )}
-      <br />
-
-      <div>
-        <Flex className="mt-4" justifyContent="start">
-          {/* <Icon
+      ) : null}
+      <div className="mt-4">
+        <Flex justifyContent="start">
+          <Title>Synced Accounts ({items.length})</Title>
+        </Flex>
+      </div>
+      {convertedItems && convertedItems.length > 0 ? (
+        <>
+          <div className="mt-4 w-full">
+            <AccountCards items={convertedItems} />
+          </div>
+          <Flex className="pt-4 mt-6 border-t">
+            <Button size="xs" variant="light" icon={ArrowNarrowRightIcon} iconPosition="right" color="slate">
+              Refresh data (balance & transactions)
+            </Button>
+          </Flex>
+        </>
+      ) : null}
+      <Card className="p-4 mt-6">
+        <Title>
+          <Icon
             tooltip={`Connect multiple bank accounts and credit cards to get a consolidated view of all your finances. To connect an account, click "Connect" in the dropdown menu located in the top right icon of Navigation menu.`}
             variant="light"
             color="slate"
             icon={CheckCircleIcon}
             size="sm"
             className="mr-4"
-          /> */}
-          <Title>
-            Connected Accounts ({items.length})
-          </Title>
-        </Flex>
-      </div>
-      <br />
-      <div className="w-full">
-        <AccountCards items={convertedItems} />
-      </div>
-      <Flex className="pt-4 mt-6 border-t">
-        <Button size="xs" variant="light" icon={ArrowNarrowRightIcon} iconPosition="right" color="slate">
-          Refresh data (balance & transactions)
-        </Button>
-      </Flex>
-      <br />
-      <br />
-      <Grid numItemsSm={2} className="w-full gap-6">
+          />
+          Connect An Account
+        </Title>
+        <Text className="mt-2">
+          Get a bird's eye view of your finances by connecting your bank accounts and credit cards.
+        </Text>
+        <div className="mt-4">
+          <ConnectButtonModal />
+        </div>
+      </Card>
+      <Grid numItemsSm={2} className="w-full gap-6 mt-6">
         {categories.map((item, index) => (
           <Card key={`category_${index}`} className="p-4">
             <Icon variant="light" icon={item.icon} size="sm" color="slate" />
@@ -437,8 +449,6 @@ export default function Dashboard() {
           </Card>
         ))}
       </Grid>
-      <br />
-      <br />
     </main>
   );
 }

@@ -10,24 +10,24 @@ import {
 } from 'ai/rsc'
 import OpenAI from 'openai'
 
-import { BotCard, BotMessage } from '@/components/stocks/message'
+import { BotCard, BotMessage } from '@/components/chatui/message'
 
 import { z } from 'zod'
 import {
   nanoid, sleep
 } from '@/lib/utils'
 import { saveChat } from '@/app/actions/chat'
-import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
+import { SpinnerMessage, UserMessage } from '@/components/chatui/message'
 import { Chat } from '@/lib/types'
 import { getFullUserInfo, getAccessToken } from '@/app/actions/auth'
-import CategoryTransactionsSkeleton from '@/components/stocks/category-transaction-skeleton'
-import CategoryTransactions from '@/components/stocks/category-transaction'
-import RecurringTransactionsSkeleton from '@/components/stocks/recurring-transactions-skeleton'
-import RecurringTransactions from '@/components/stocks/recurring-transactions'
-import AccountCardsSkeleton from '@/components/stocks/account-cards-skeleton'
-import AccountCards from '@/components/stocks/account-cards'
-import AccountDetailSkeleton from '@/components/stocks/account-detail-skeleton'
-import AccountDetail from '@/components/stocks/account-detail'
+import CategoryTransactionsSkeleton from '@/components/chatui/category-transaction-skeleton'
+import CategoryTransactions from '@/components/chatui/category-transaction'
+import RecurringTransactionsSkeleton from '@/components/chatui/recurring-transactions-skeleton'
+import RecurringTransactions from '@/components/chatui/recurring-transactions'
+import AccountCardsSkeleton from '@/components/chatui/account-cards-skeleton'
+import AccountCards from '@/components/chatui/account-cards'
+import AccountDetailSkeleton from '@/components/chatui/account-detail-skeleton'
+import AccountDetail from '@/components/chatui/account-detail'
 import { getChartInfo, getDashboard, getUserInfo } from '@/server/user'
 
 const openai = new OpenAI({

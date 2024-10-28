@@ -8,7 +8,6 @@ import usePlaidInit from "@/hooks/usePlaidInit";
 import useGetTransactionsSync from "@/hooks/useGetTransactionsSync";
 import useGetAccounts from "@/hooks/useGetAccounts";
 import { getUserInfo } from "@/store/actions/useUser";
-import WelcomeModal from "./WelcomeModal";
 import { usePathname } from "next/navigation";
 import { Landmark } from "lucide-react";
 
@@ -24,12 +23,12 @@ const Navbar = () => {
             href: "/dashboard"
         },
         {
-            label: "Analyze",
-            href: "/dashboard/charts"
-        },
-        {
             label: "Chat",
             href: "/dashboard/chat"
+        },
+        {
+            label: "Analyze",
+            href: "/dashboard/charts"
         },
         {
             label: "Browse",
@@ -55,7 +54,7 @@ const Navbar = () => {
                     <div className="flex items-center justify-center my-2 mr-4 font-bold text-black bg-gray-100 rounded-full w-11 h-11">
                         <Landmark />
                     </div>
-                    <span className="text-center">Plaid AI Dashboard</span>
+                    <span className="hidden md:block text-center">Plaid AI Dashboard</span>
                 </div>
                 <div className="absolute flex gap-2 space-x-4 transform -translate-x-1/2 left-1/2">
                     {navItems.map((item, index) => {

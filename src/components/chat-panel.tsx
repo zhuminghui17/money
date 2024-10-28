@@ -10,7 +10,7 @@ import { FooterText } from '@/components/footer'
 import { useAIState, useActions, useUIState } from 'ai/rsc'
 import type { AI } from '@/lib/chat/actions'
 import { nanoid } from 'nanoid'
-import { UserMessage } from './stocks/message'
+import { UserMessage } from './chatui/message'
 
 export interface ChatPanelProps {
   id?: string

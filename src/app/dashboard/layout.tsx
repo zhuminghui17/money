@@ -12,7 +12,7 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
     return (
         <>
-            <div className={`grid min-h-screen bg-muted`}>
+            <div className={`grid min-h-screen bg-muted max-w-full overflow-x-hidden`}>
                 <div className="relative">
                     <Navbar />
                     {children}

@@ -38,6 +38,7 @@ import Link from "next/link";
 export default function Setting() {
     const dispatch = useDispatch();
     const { user, items } = useSelector(state => state.user);
+    const accounts = Array.isArray(items) ? items : [];
     const [userInfo, setUserInfo] = useState({});
     const [showModal, setShowModal] = useState(false);
 
@@ -97,9 +98,6 @@ export default function Setting() {
 
     return (
         <main className="min-h-screen p-4 m-auto max-w-7xl bg-muted/50">
-            {/* <Text className="mt-6">
-                {"A bird's eye view of your financial positions."}
-            </Text> */}
             <Grid numItemsLg={2} className="gap-6 mt-6">
                 <Card className="px-4 sm:px-6">
                     <Metric className="truncate">User Info</Metric>
@@ -204,30 +202,6 @@ export default function Setting() {
                 </Card>
                 <Card className="px-4 sm:px-6">
                     <Metric className="truncate">Twilio</Metric>
-                    {/* <Flex className="mt-4 space-x-2">
-                        <Text className="w-1/3 truncate">OpenAI Key</Text>
-                        <TextInput
-                            value={userInfo?.openAiKey ?? ""}
-                            onChange={e =>
-                                setUserInfo({
-                                    ...userInfo,
-                                    openAiKey: e.target.value
-                                })
-                            }
-                        />
-                    </Flex>
-                    <Flex className="mt-4 space-x-2">
-                        <Text className="w-1/3 truncate">Database Key</Text>
-                        <TextInput
-                            value={userInfo?.mongoDBURL ?? ""}
-                            onChange={e =>
-                                setUserInfo({
-                                    ...userInfo,
-                                    mongoDBURL: e.target.value
-                                })
-                            }
-                        />
-                    </Flex> */}
                     <Flex className="mt-4 space-x-2">
                         <Text className="w-2/3 truncate">Phone (consent to SMS, fees apply)</Text>
                         <PhoneInput
@@ -254,30 +228,6 @@ export default function Setting() {
                             }
                         />
                     </Flex>
-                    {/* <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Flex className="mt-4 space-x-2">
-                                <Text className="w-1/3 truncate">
-                                    Store All Data
-                                </Text>
-                                <Flex>
-                                    <Checkbox
-                                        checked={userInfo?.storeAYear}
-                                        handleChange={e =>
-                                            setUserInfo({
-                                                ...userInfo,
-                                                storeAYear: e.target.checked
-                                            })
-                                        }
-                                    />
-                                </Flex>
-                            </Flex>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            Default Store Period is a year. If you enable this
-                            setting, it will store all data
-                        </TooltipContent>
-                    </Tooltip> */}
                     <Flex className="mt-4 space-x-2">
                         <div className="w-1/3 truncate" />
                         <Flex>
@@ -312,8 +262,8 @@ export default function Setting() {
                     </TableHead>
 
                     <TableBody>
-                        {items?.map(item => {
-                            return item?.accounts?.map((account, index) => (
+                        {accounts && accounts.map(item => {
+                            return accounts.map((account, index) => (
                                 <TableRow key={`acc_${index}`}>
                                     <TableCell>{index == 0 && item.institution.name}</TableCell>
                                     <TableCell className="text-right">{account.name}</TableCell>
