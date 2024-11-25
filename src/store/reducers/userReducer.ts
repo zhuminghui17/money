@@ -35,12 +35,17 @@ const initialState = {
     selectedAccounts: []
 };
 
-export const userReducer = (state = initialState, { type, payload }) => {
+interface Action {
+    type: string;
+    payload?: any;
+}
+
+export const userReducer = (state = initialState, { type, payload }: Action) => {
     switch (type) {
         case SET_USER_INFO:
             return { ...state, ...payload };
         case DELETE_ITEM_BY_ID:
-            const newItems = state.items.filter(item => payload !== item.id);
+            const newItems = state.items.filter((item: any) => payload !== item.id);
             return { ...state, items: newItems };
         case UPDATE_USER_INFO:
             return { ...state, user: { ...state.user, ...payload } };

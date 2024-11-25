@@ -7,7 +7,12 @@ const initialState = {
 	data: [],
 };
 
-export const transactionReducer = (state = initialState, { type, payload }) => {
+interface Action {
+    type: string;
+    payload?: any;
+}
+
+export const transactionReducer = (state = initialState, { type, payload }: Action) => {
 	switch (type) {
 		case SET_TRANSACTION:
 			return { ...state, ...payload };

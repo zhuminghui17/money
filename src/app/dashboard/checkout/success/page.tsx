@@ -3,7 +3,13 @@ import { redirect } from "next/navigation";
 import UseUpdateSession from "@/hooks/useUpdateSession";
 import { updateUserInfoServerSide } from "@/app/actions/user";
 
-export default async function CheckoutSuccess({ searchParams }) {
+export default async function CheckoutSuccess({
+    searchParams
+} : {
+    searchParams: {
+        session_id: string
+    }
+}) {
     let checkoutSession;
     try {
         checkoutSession = await stripe.checkout.sessions.retrieve(searchParams.session_id);

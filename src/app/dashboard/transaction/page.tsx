@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPaymentTransaction } from "@/store/actions/useTransaction";
 import SearchInput from "@/components/Basic/SearchInput";
 import { InformationCircleIcon } from "@heroicons/react/solid";
-import Datepicker from "react-tailwindcss-datepicker";
+import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
 import {
     Card,
     Title,
@@ -32,8 +32,12 @@ import { getAllCategories } from "@/store/actions/usePlaid";
 import { useSearchParams } from "next/navigation";
 import { valueFormatter } from "@/utils/util";
 import Browse from "./Browe";
+import { AppDispatch, RootState } from "@/store";
+import { Account, Item, Transaction } from "@/lib/types";
 
-function formatCurrencyValue(value) {
+type AccountMap = { [key: string]: string };
+
+function formatCurrencyValue(value: number) {
     if (typeof value === "string") {
         value = parseFloat(value);
         if (isNaN(value)) {
@@ -51,22 +55,22 @@ function formatCurrencyValue(value) {
 }
 
 export default function Transactions() {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const searchParams = useSearchParams();
     const { isItemAccess, isTransactionsLoaded, categories, personalFinanceCategories } = useSelector(
-        state => state.plaid
+        (state: RootState) => state.plaid
     );
-    const { data: transactions, size: total } = useSelector(state => state.transactions);
-    const { items, annualTransactionData } = useSelector(state => state.user);
-    const [selectedCategories, setSelectedCategories] = useState([]);
+    const { data: transactions, size: total } = useSelector((state: RootState) => state.transactions);
+    const { items, annualTransactionData } = useSelector((state: RootState) => state.user);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [selectedFinCategories, setSelectedFinCategories] = useState(
         isEmpty(searchParams.get("financeCategory")) ? [] : searchParams.get("financeCategory")?.split(",")
     );
     const [selectedAccounts, setSelectedAccounts] = useState(
         isEmpty(searchParams.get("accounts")) ? [] : searchParams.get("accounts")?.split(",")
     );
-    const [selectedPaymentChannel, setSelectedPaymentChannel] = useState(
-        isEmpty(searchParams.get("channel")) ? "all" : searchParams.get("channel")
+    const [selectedPaymentChannel, setSelectedPaymentChannel] = useState<string | null>(
+        isEmpty(searchParams.get("channel")) ? "all" : searchParams.get("channel") || null
     );
     const currentDate = new Date();
     const threeMonthsAgo = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, currentDate.getDate());
@@ -98,7 +102,7 @@ export default function Transactions() {
     const closeModal = () => setIsOpen(false); //add code to export to downloads (pdf, csv, json)
     // fetch data
     const fetchData = useCallback(
-        newCurPage => {
+        (newCurPage: number) => {
             try {
                 setCurrentPage(newCurPage);
                 dispatch(
@@ -155,20 +159,20 @@ export default function Transactions() {
     }, [isItemAccess, items, isTransactionsLoaded, dispatch, getAllCategories]);
 
     // Create a mapping of account IDs to account names
-    const accountIdToName = {};
-    const depositories = {};
-    items?.forEach(item => {
-        item?.accounts?.forEach(account => {
-            accountIdToName[account.account_id] = account.name;
+    const accountIdToName: AccountMap = {};
+    const depositories: AccountMap = {};
+    items?.forEach((item: Item) => {
+        item?.accounts?.forEach((account: Account) => {
+            accountIdToName[account.account_id] = account.name ?? "unknown";
             if (account.type == "depository") {
-                depositories[account.account_id] = account.name;
+                depositories[account.account_id] = account.name ?? "unknown";
             }
         });
     });
 
     // console.log(accountIdToName, depositories);
 
-    const moneyIn = transactions.reduce((acc, item) => {
+    const moneyIn = transactions.reduce((acc: number, item: Transaction) => {
         if (
             item.amount < 0 &&
             !item.category?.includes("Payment") &&
@@ -182,7 +186,7 @@ export default function Transactions() {
         return acc;
     }, 0);
 
-    const moneyOut = transactions.reduce((acc, item) => {
+    const moneyOut = transactions.reduce((acc: number, item: Transaction) => {
         if (
             item.amount > 0 &&
             // !item.category?.includes("Payment") &&
@@ -248,7 +252,7 @@ export default function Transactions() {
                                 className="max-w-full mb-2 sm:max-w-xs md:mb-0"
                                 placeholder="Search transactions..."
                                 value={merchantName}
-                                onChange={e => setMerchantName(e.target.value)}
+                                onChange={(e: any) => setMerchantName(e.target.value)}
                                 onSearch={fetchData}
                             />
                              {categories && <MultiSelect
@@ -256,7 +260,7 @@ export default function Transactions() {
                                 onValueChange={setSelectedCategories}
                                 placeholder="Select Category..."
                             >
-                                {categories?.map(item => (
+                                {categories?.map((item: string) => (
                                     <MultiSelectItem key={item} value={item}>
                                         {item !== null ? item : "Uncategorized"}
                                     </MultiSelectItem>
@@ -266,7 +270,7 @@ export default function Transactions() {
                                 className="flex-1 mb-2 md:mb-0"
                                 defaultValue="all"
                                 onValueChange={setSelectedPaymentChannel}
-                                value={selectedPaymentChannel}
+                                value={selectedPaymentChannel ?? undefined}
                             >
                                 <SelectItem value="all">All Payment Channel</SelectItem>
                                 <SelectItem value="online">Online Channel</SelectItem>
@@ -280,8 +284,19 @@ export default function Transactions() {
                                 inputClassName="w-full text-sm outline-none text-left whitespace-nowrap truncate rounded-tremor-default focus:ring-2 transition duration-100 shadow-tremor-input focus:border-tremor-brand-subtle focus:ring-tremor-brand-muted dark:shadow-dark-tremor-input dark:focus:border-dark-tremor-brand-subtle dark:focus:ring-dark-tremor-brand-muted pl-3 pr-8 py-2 border bg-tremor-background dark:bg-dark-tremor-background hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis border-tremor-border dark:border-dark-tremor-border"
                                 useRange={true}
                                 showShortcuts={true}
-                                value={filterDate}
-                                onChange={setFilterDate}
+                                value={{
+                                    startDate: filterDate.startDate ? new Date(filterDate.startDate) : null,
+                                    endDate: filterDate.endDate ? new Date(filterDate.endDate) : null,
+                                  }}
+                                onChange={(value: DateValueType, e?: HTMLInputElement | null) => {
+                                    const newFilterDate = {
+                                        startDate: value?.startDate ? value.startDate.toISOString() : null,
+                                        endDate: value?.endDate ? value.endDate.toISOString() : null,
+                                    };
+                                
+                                    // Update the state using setFilterDate
+                                    setFilterDate(newFilterDate);
+                                }}
                                 configs={{
                                     shortcuts: {
                                         // today: "Today",
@@ -294,15 +309,15 @@ export default function Transactions() {
                                             period: {
                                                 start: new Date(
                                                     new Date().setFullYear(new Date().getFullYear() - 1)
-                                                ).toISOString(),
-                                                end: new Date().toISOString()
+                                                ),
+                                                end: new Date()
                                             }
                                         },
                                         yearToDate: {
                                             text: "Year to date",
                                             period: {
-                                                start: new Date(new Date().getFullYear(), 0, 1).toISOString(),
-                                                end: new Date().toISOString()
+                                                start: new Date(new Date().getFullYear(), 0, 1),
+                                                end: new Date()
                                             }
                                         }
                                     }
@@ -316,8 +331,8 @@ export default function Transactions() {
                                 value={selectedAccounts}
                                 placeholder="Select Accounts..."
                             >
-                                {items?.map(item => {
-                                    return item?.accounts?.map(account => (
+                                {items?.map((item: Item) => {
+                                    return item?.accounts?.map((account: Account) => (
                                         <MultiSelectItem key={account.account_id} value={account.account_id}>
                                             {account.name}
                                         </MultiSelectItem>
@@ -330,7 +345,7 @@ export default function Transactions() {
                                 value={selectedFinCategories}
                                 placeholder="Select Financial Category..."
                             >
-                                {personalFinanceCategories?.map(item => (
+                                {personalFinanceCategories?.map((item: string) => (
                                     <MultiSelectItem key={item} value={item}>
                                         {item}
                                     </MultiSelectItem>
@@ -384,7 +399,7 @@ export default function Transactions() {
                         </TableHead>
 
                         <TableBody>
-                            {transactions?.map((item, index) => (
+                            {transactions?.map((item: Transaction, index: number) => (
                                 <TableRow key={"transaction_" + index}>
                                     <TableCell>{dateFormat(item.date)}</TableCell>
                                     <TableCell className="max-w-[10rem] overflow-hidden text-left text-ellipsis">

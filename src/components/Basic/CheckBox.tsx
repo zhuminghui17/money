@@ -1,12 +1,25 @@
 import React from "react";
 // import { Checkbox } from "@heroicons/react/solid";
 
-const Checkbox = ({ label, name, checked, handleChange, disabled, className }) => {
+const Checkbox = ({
+    label,
+    name,
+    checked,
+    handleChange,
+    disabled,
+    className
+} : {
+    label?: string;
+    name?: string;
+    checked: boolean;
+    handleChange: (event: React.FormEvent<HTMLInputElement>) => void;
+    disabled?: boolean;
+    className?: string;
+ 
+}) => {
     return (
         <label
-            onClick={handleChange}
             id={name}
-            name={name}
             className={`${className === undefined ? "" : className} flex cursor-pointer items-center`}
         >
             <input

@@ -4,7 +4,12 @@ const initialState = {
 	theme: "light",
 };
 
-export const themeReducer = (state = initialState, { type, payload }) => {
+interface Action {
+    type: string;
+    payload?: any;
+}
+
+export const themeReducer = (state = initialState, { type, payload }: Action) => {
 	switch (type) {
 		case SET_THEME_MODE:
 			return {

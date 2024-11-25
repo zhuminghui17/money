@@ -33,6 +33,8 @@ import TopPurchaseCategory from "./spendByCategory/TopPurchaseCategory";
 import SpendByChannel from "./recurringSpend/SpendByChannel";
 import RecurringTransaction from "./recurringSpend/RecurringTransaction";
 import Summary from "./Summary";
+import { AppDispatch, RootState } from "@/store";
+import { Item } from "@/lib/types";
 
 const Kpis = {
     Spend: "spend",
@@ -42,7 +44,7 @@ const Kpis = {
 const kpiList = [Kpis.Spend, Kpis.Transactions];
 
 export default function Charts() {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const {
         chartData,
         chartDataByMonth,
@@ -59,17 +61,17 @@ export default function Charts() {
         analyzeSummary,
         filterDate,
         selectedAccounts
-    } = useSelector(state => state.user);
-    const { isTransactionsLoaded } = useSelector(state => state.plaid);
-    const [filterCreditCards, setFilterCreditCards] = useState(true);
+    } = useSelector((state: RootState) => state.user);
+    const { isTransactionsLoaded } = useSelector((state: RootState) => state.plaid);
+    const [filterCreditCards, setFilterCreditCards] = useState('true');
     const [isDataReady, setIsDataReady] = useState(false);
     const hasMadeApiCall = useRef(false);
     const [insightsVisible, setInsightsVisible] = useState(true);
     const [aiSummary, setAiSummary] = useState("Summarizing insights from transactions data... ");
     const [selectedIndex, setSelectedIndex] = useState(0);
     const selectedKpi = kpiList[selectedIndex];
-    const setFilterDate = date => dispatch(setAnalyzeFilterDate(date));
-    const setSelectedAccounts = accounts => dispatch(setAnalyzeSelectedAccounts(accounts));
+    const setFilterDate = (date: any) => dispatch(setAnalyzeFilterDate(date));
+    const setSelectedAccounts = (accounts: any[]) => dispatch(setAnalyzeSelectedAccounts(accounts));
 
     const initAISummary = useCallback(() => {
         dispatch(setUserAnalyzeAISummary(""));
@@ -104,7 +106,7 @@ export default function Charts() {
         if (isDataReady && !hasMadeApiCall.current && analyzeSummary?.length < 50) {
             try {
                 hasMadeApiCall.current = true;
-                const { data } = await getAIResponse(
+                const response = await getAIResponse(
                     `data:{${JSON.stringify([
                         barListData,
                         donutChartData,
@@ -115,7 +117,15 @@ export default function Charts() {
                         averageMonthlySpend
                     ])}}`
                 );
-                dispatch(setUserAnalyzeAISummary(data?.message));
+
+                if (response) {  // Check if response is not undefined
+                    const { data } = response;
+                    // Use data safely here
+                    dispatch(setUserAnalyzeAISummary(data?.message));
+                } else {
+                    // Handle the undefined case gracefully
+                    console.error('Response was undefined');
+                }
             } catch (error) {
                 handleError(error);
             }
@@ -126,10 +136,10 @@ export default function Charts() {
         let totalSpend = 0;
         let totalMoneyIn = 0;
         let totalTransactions = 0;
-        let numberOfMonths = filterCreditCards === true ? monthlySpendNoCards?.length : monthlySpend?.length;
+        let numberOfMonths = filterCreditCards === 'true' ? monthlySpendNoCards?.length : monthlySpend?.length;
 
         for (let i = 0; i < numberOfMonths; i++) {
-            if(filterCreditCards === true) {
+            if(filterCreditCards === 'true') {
                 totalSpend += monthlySpendNoCards[i]?.spend;
                 totalMoneyIn += monthlySpendNoCards[i]?.moneyIn;
                 totalTransactions += monthlySpendNoCards[i]?.count;
@@ -154,12 +164,12 @@ export default function Charts() {
 
     const { averageMonthlySpend, averageMonthlyMoneyIn , avgTransaction} = calculateAveragesMonthly();
 
-    const handleSetSelectedAccounts = e => {
+    const handleSetSelectedAccounts = (e: any) => {
         dispatch(setUserAnalyzeAISummary(""));
         setSelectedAccounts(e);
     };
 
-    const handleSetFilterDate = e => {
+    const handleSetFilterDate = (e: any) => {
         setFilterDate(e);
         dispatch(setUserAnalyzeAISummary(""));
     };
@@ -182,15 +192,15 @@ export default function Charts() {
                             yearFromToday: {
                                 text: "1 year back",
                                 period: {
-                                    start: new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString(),
-                                    end: new Date().toISOString()
+                                    start: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+                                    end: new Date()
                                 }
                             },
                             yearToDate: {
                                 text: "Year-to-date",
                                 period: {
-                                    start: new Date(new Date().getFullYear(), 0, 1).toISOString(),
-                                    end: new Date().toISOString()
+                                    start: new Date(new Date().getFullYear(), 0, 1),
+                                    end: new Date()
                                 }
                             }
                         }
@@ -202,7 +212,7 @@ export default function Charts() {
                     value={selectedAccounts}
                     placeholder="Select Accounts..."
                 >
-                    {items?.map(item => {
+                    {items?.map((item: Item) => {
                         return item?.accounts?.map(account => (
                             <MultiSelectItem key={account.account_id} value={account.account_id}>
                                 {account.name}
@@ -211,10 +221,10 @@ export default function Charts() {
                     })}
                 </MultiSelect>
                 <Select className="max-w-sm mt-1 md:mt-0 ml-1" value={filterCreditCards} onValueChange={setFilterCreditCards}>
-                    <SelectItem value={true} icon={CalculatorIcon}>
+                    <SelectItem value={'true'} icon={CalculatorIcon}>
                         Yes, filter credit payments out of spend
                     </SelectItem>
-                    <SelectItem value={false} icon={BookOpenIcon}>
+                    <SelectItem value={'false'} icon={BookOpenIcon}>
                         No, include card payments in spend
                     </SelectItem>
                 </Select>

@@ -18,9 +18,10 @@ import {
     // LineChart,
 } from "@tremor/react";
 import { editDateProperty } from "../../../utils/util";
+import { RootState } from "@/store";
 
 const Browe = () => {
-    const chartConfig = useMemo(() => ({
+    const chartConfig: ChartConfig = useMemo(() => ({
         amount: {
             label: "Amount",
             color: "hsl(var(--chart-1))",
@@ -35,7 +36,7 @@ const Browe = () => {
         },
     }), [])
 
-    const { data: transactions, size: total } = useSelector(state => state.transactions);
+    const { data: transactions, size: total } = useSelector((state: RootState) => state.transactions);
     const reversedTransactions = useMemo(() => editDateProperty([...transactions].reverse()), [transactions]);
 
     return (

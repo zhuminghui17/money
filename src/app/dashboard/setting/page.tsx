@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteItemInfoById, updateUserInfo } from "@/store/actions/useUser";
 import { CurrencyDollarIcon, InformationCircleIcon, TrashIcon, CalendarIcon } from "@heroicons/react/solid";
-import { countries } from "countries-list";
+import { countries, ICountry, TCountries } from "countries-list";
 import {
     Card,
     Grid,
@@ -34,12 +34,31 @@ import toast from "react-hot-toast";
 import apiCall from "@/utils/apiCall";
 import useGetAccounts from "@/hooks/useGetAccounts";
 import Link from "next/link";
+import { AppDispatch, RootState } from "@/store";
+import { User } from "@/lib/types";
 
 export default function Setting() {
-    const dispatch = useDispatch();
-    const { user, items } = useSelector(state => state.user);
+    const dispatch = useDispatch<AppDispatch>();
+    const { user, items } = useSelector((state: RootState) => state.user);
     const accounts = Array.isArray(items) ? items : [];
-    const [userInfo, setUserInfo] = useState({});
+    const [userInfo, setUserInfo] = useState<User>({
+        id: '',
+        name: '',
+        email: '',
+        locale: '',
+        storeAYear: false,
+        isPro: false,
+        createdAt: new Date(),
+        phone: '',
+        country: '',
+        salary: 0,
+        payday: 0,
+        kpis: [],
+        kpis_prev: [],
+        transactions: [],
+        items: [],
+        chats: []
+    });
     const [showModal, setShowModal] = useState(false);
 
     useGetAccounts();
@@ -56,17 +75,17 @@ export default function Setting() {
         setUserInfo(user);
     }, [user]);
 
-    const handleDelete = item_id => {
+    const handleDelete = (item_id: string) => {
         dispatch(deleteItemInfoById(item_id));
     };
 
-    const setSalary = salary => {
-        if (!isEmpty(salary) && parseInt(salary) > 0) setUserInfo({ ...userInfo, salary: String(salary) });
+    const setSalary = (salary: number) => {
+        if (!isEmpty(salary) && salary > 0) setUserInfo({ ...userInfo, salary: salary });
     };
 
-    const setSalaryDate = payday => {
-        const temp = parseInt(payday);
-        if (!isEmpty(payday) && temp > 0 && temp < 32) setUserInfo({ ...userInfo, payday: String(temp) });
+    const setSalaryDate = (payday: number) => {
+        const temp = payday;
+        if (!isEmpty(payday) && temp > 0 && temp < 32) setUserInfo({ ...userInfo, payday: temp });
     };
 
     const handleDeleteAccount = () => {
@@ -83,7 +102,7 @@ export default function Setting() {
         dispatch(updateUserInfo(userInfo));
     };
 
-    const handleCheckProducts = (e, product) => {
+    const handleCheckProducts = (e: any) => {
         if (isEmpty(e.target.checked)) return;
         if (e.target.checked) {
             setUserInfo({
@@ -122,11 +141,14 @@ export default function Setting() {
                             onValueChange={country => setUserInfo({ ...userInfo, country })}
                             defaultValue={user?.country}
                         >
-                            {Object.keys(countries)?.map(key => (
-                                <SearchSelectItem key={countries[key].name} value={countries[key].name}>
-                                    {countries[key].name}
-                                </SearchSelectItem>
-                            ))}
+                            {Object.keys(countries)?.map((key) => {
+                                const country = countries[key as keyof typeof countries] as ICountry;
+                                return (
+                                    <SearchSelectItem key={country.name} value={country.name}>
+                                        {country.name}
+                                    </SearchSelectItem>
+                                )
+                            })}
                         </SearchSelect>
                     </Flex>
                     <Flex className="mt-4 space-x-2">
@@ -194,7 +216,7 @@ export default function Setting() {
                                     {user.isPro ? "Cancel Subscription" : "Subscription"}
                                 </Button>
                             </Link>
-                            <Button color="black" className="w-full sm:w-auto" onClick={() => handleUpdateUserInfo()}>
+                            <Button color="slate" className="w-full sm:w-auto" onClick={() => handleUpdateUserInfo()}>
                                 Update
                             </Button>
                         </Flex>
@@ -231,7 +253,7 @@ export default function Setting() {
                     <Flex className="mt-4 space-x-2">
                         <div className="w-1/3 truncate" />
                         <Flex>
-                            <Button color="black" onClick={() => handleUpdateUserInfo()}>
+                            <Button color="slate" onClick={() => handleUpdateUserInfo()}>
                                 Save
                             </Button>
                         </Flex>

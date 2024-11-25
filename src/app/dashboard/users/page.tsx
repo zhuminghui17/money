@@ -22,6 +22,7 @@ import Pagination from "@/components/Basic/Pagination";
 import SearchInput from "@/components/Basic/SearchInput";
 import apiCall from "@/utils/apiCall";
 import Checkbox from "@/components/Basic/CheckBox";
+import { User } from "@/lib/types";
 
 export default function Users() {
     const [searchKey, setSearchKey] = useState("");
@@ -29,11 +30,11 @@ export default function Users() {
     const [pageSize, setPageSize] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
 
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState<User[]>([]);
     const [total, setTotal] = useState(0);
 
     const fetchData = useCallback(
-        async newCurPage => {
+        async (newCurPage: number) => {
             try {
                 setCurrentPage(newCurPage);
                 const res = await apiCall.post("/api/v1/user/users", {
@@ -57,7 +58,7 @@ export default function Users() {
         fetchData(1);
     }, [selectedPayStatus, pageSize]);
 
-    const setPayState = async (email, isPro) => {
+    const setPayState = async (email: string, isPro: boolean) => {
         const res = await apiCall.post("/api/v1/user/users/pay", {
             email,
             isPro
@@ -88,7 +89,7 @@ export default function Users() {
                             className="mr-2"
                             placeholder="Input User's Email"
                             value={searchKey}
-                            onChange={e => setSearchKey(e.target.value)}
+                            onChange={(e: any) => setSearchKey(e.target.value)}
                             onSearch={() => fetchData(1)}
                         />
                         <Select className="flex-1" defaultValue="all" onValueChange={setSelectedPayStatus}>
@@ -127,7 +128,6 @@ export default function Users() {
                                         <Checkbox
                                             checked={item.isPro}
                                             handleChange={() => setPayState(item.email, !item.isPro)}
-                                            color="slate"
                                         />
                                     </TableCell>
                                 </TableRow>

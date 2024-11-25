@@ -4,9 +4,9 @@ import { useState } from "react";
 const Pagination = ({
     total = 100,
     pageSize = 10,
-    setPageSize = () => console.log("setPageSize"),
+    setPageSize = (size) => console.log("setPageSize"),
     currentPage = 1,
-    setCurrentPage = () => console.log("setCurrentPage")
+    setCurrentPage = (page) => console.log("setCurrentPage")
 }) => {
     const totalPages = Math.ceil(total / pageSize);
     let startPage = Math.max(currentPage - 2, 1);

@@ -42,7 +42,12 @@ const initialState = {
     transfer: {}
 };
 
-export const plaidReducer = (state = initialState, { type, payload }) => {
+interface Action {
+    type: string;
+    payload?: any;
+}
+
+export const plaidReducer = (state = initialState, { type, payload }: Action) => {
     switch (type) {
         case SET_PLAID_STATE:
         case SET_PLAID_PAYMENT_STATE:

@@ -3,9 +3,11 @@ import { SET_TRANSACTION } from "../constants/transactionConstants";
 import { SET_ANNUAL_TRANSACTION } from "../constants/userConstants";
 import { handleError } from "@/utils/util";
 import { setTransactions } from "@/store/actions/usePlaid";
-import { useSelector } from "react-redux";
+import { Action, Dispatch } from "redux";
+import { ThunkAction } from "redux-thunk";
+import { RootState } from "..";
 
-export const getPaymentTransaction = (data, isSaveKPI) => async dispatch => {
+export const getPaymentTransaction = (data: any, isSaveKPI: boolean) => async (dispatch: Dispatch<Action>) => {
     try {
         const res = await apiCall.post("/api/v1/transaction/getData", data);
         dispatch({
@@ -20,7 +22,14 @@ export const getPaymentTransaction = (data, isSaveKPI) => async dispatch => {
     }
 };
 
-export const allTransactionSync = data => async dispatch => {
+type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  Action
+>;
+
+export const allTransactionSync = (): AppThunk => async (dispatch) => {
     try {
         dispatch(setTransactions({ isTransactionsLoaded: false }));
 
