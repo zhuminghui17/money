@@ -1,6 +1,29 @@
 # AI Personal Finance Dashboard
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). This project utilizes Plaid and OpenAI technologies as well as modern UI to unlock insights into your spending and transactions.
 
+![image](https://github.com/user-attachments/assets/7a299ded-228d-4eca-a9f6-0687f412a167)
+
+## Key Features
+- Overview of account and card balances
+- Rich Datagrid to browse transactions and filter by time-range, spend category & more
+- Shadcn charts to analyze monthly and recurring spend
+- AI Chat to ask Q&A about your accounts & financial position (Vercel AI SDK)
+
+![image](https://github.com/user-attachments/assets/ec6117ee-d254-45a7-81d4-82964ee78de0)
+
+![image](https://github.com/user-attachments/assets/baa2efb1-6a52-4a1c-a0bb-a1f44db703c1)
+
+![image](https://github.com/user-attachments/assets/aee2360d-c048-44c4-85e7-4b04b7c1d9ee)
+
+![image](https://github.com/user-attachments/assets/1068740c-2fc2-4d79-9555-43e779c6c424)
+
+![image](https://github.com/user-attachments/assets/bc89ed94-4124-4a1a-9e67-10ad1fc607ea)
+
+![image](https://github.com/user-attachments/assets/c96ad59a-3101-4881-83d0-6e48046d9e36)
+
+![image](https://github.com/user-attachments/assets/60771323-653e-4180-82ec-a24a36e4a83a)
+
+  
 ## Getting Started
 
 First, run the development server:
