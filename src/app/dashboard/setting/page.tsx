@@ -89,7 +89,7 @@ export default function Setting() {
     };
 
     const handleDeleteAccount = () => {
-        apiCall.delete("/api/v1/user").then(res => {
+        apiCall.delete("/api/v1/user").then(() => {
             signOut();
         });
     };

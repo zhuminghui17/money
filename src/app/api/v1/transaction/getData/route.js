@@ -5,6 +5,7 @@ export async function POST(req) {
   try {
     const { filter } = await req.json();
     const data = await getTransaction(filter);
+    console.log(JSON.stringify(data, null, 2));
     return NextResponse.json(data);
   } catch (err) {
     return NextResponse.json({

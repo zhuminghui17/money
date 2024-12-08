@@ -38,9 +38,8 @@ const Navbar = () => {
 
     usePlaidInit();
     useGetTransactionsSync();
-
     const fetchData = useCallback(() => {
-        dispatch<any>(getUserInfo());
+        dispatch<any>(getUserInfo({}));
     }, [dispatch]);
 
     useEffect(() => {

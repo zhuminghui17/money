@@ -13,6 +13,7 @@ import {
     MultiSelect,
     MultiSelectItem
 } from "@tremor/react";
+
 import { CalculatorIcon, BookOpenIcon } from "@heroicons/react/outline";
 import { useCallback, useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,6 +36,7 @@ import RecurringTransaction from "./recurringSpend/RecurringTransaction";
 import Summary from "./Summary";
 import { AppDispatch, RootState } from "@/store";
 import { Item } from "@/lib/types";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Kpis = {
     Spend: "spend",
@@ -75,7 +77,7 @@ export default function Charts() {
 
     const initAISummary = useCallback(() => {
         dispatch(setUserAnalyzeAISummary(""));
-    }, [dispatch, filterDate, selectedAccounts]);
+    }, [dispatch]);
 
     const fetchData = useCallback(async () => {
         if (isTransactionsLoaded) {
@@ -83,24 +85,11 @@ export default function Charts() {
             dispatch(getChartsData({ filterDate, selectedAccounts }));
             setIsDataReady(true);
         }
-    }, [
-        dispatch,
-        filterDate,
-        isTransactionsLoaded,
-        cumulativeSpend,
-        monthlySpend,
-        monthlySpendNoCards,
-        cumulativeSpendNoCards,
-        barListData,
-        donutAsBarData,
-        paymentChannelData,
-        kpis,
-        selectedAccounts
-    ]);
+    }, [dispatch, filterDate, isTransactionsLoaded, selectedAccounts]);
 
     useEffect(() => {
         fetchData();
-    }, [filterDate, items, isTransactionsLoaded, selectedAccounts]);
+    }, [filterDate, items, isTransactionsLoaded, selectedAccounts, fetchData]);
 
     const fetchAiSummary = async () => {
         if (isDataReady && !hasMadeApiCall.current && analyzeSummary?.length < 50) {
@@ -176,10 +165,10 @@ export default function Charts() {
 
     return (
         <main className="min-h-screen p-2 m-auto max-w-7xl">
-            <div className="items-center block sm:flex">
+            <div className="mt-4 w-full block sm:flex justify-end">
                 <Datepicker
-                    containerClassName="relative min-w-[12rem] md:mr-1"
-                    inputClassName="w-full text-sm outline-none text-left whitespace-nowrap truncate rounded-tremor-default focus:ring-2 transition duration-100 shadow-tremor-input focus:border-tremor-brand-subtle focus:ring-tremor-brand-muted dark:shadow-dark-tremor-input dark:focus:border-dark-tremor-brand-subtle dark:focus:ring-dark-tremor-brand-muted pl-3 pr-6 py-1 border bg-tremor-background dark:bg-dark-tremor-background hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis border-tremor-border dark:border-dark-tremor-border"
+                    containerClassName="relative w-full md:mr-1 h-full"
+                    inputClassName="w-full p-2 text-sm outline-none text-left whitespace-nowrap truncate rounded-tremor-default focus:ring-2 transition duration-100 shadow-tremor-input focus:border-tremor-brand-subtle focus:ring-tremor-brand-muted dark:shadow-dark-tremor-input dark:focus:border-dark-tremor-brand-subtle dark:focus:ring-dark-tremor-brand-muted pl-3 pr-6 border bg-tremor-background dark:bg-dark-tremor-background hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis border-tremor-border dark:border-dark-tremor-border"
                     useRange={true}
                     showShortcuts={true}
                     value={filterDate}
@@ -230,8 +219,47 @@ export default function Charts() {
                 </Select>
             </div>
             <br />
-            <Card className="px-2 border border-gray-300">
-                <TabGroup className="">
+            <Tabs defaultValue="spendOverTime" className="w-full">
+                <TabsList className="w-full border">
+                    <TabsTrigger className="w-full" value="spendOverTime">Spend over time</TabsTrigger>
+                    <TabsTrigger className="w-full" value="spendByCategory">Spend by category</TabsTrigger>
+                    <TabsTrigger className="w-full" value="recurringSpend">Recurring spend</TabsTrigger>
+                    <TabsTrigger className="w-full" value="summary" onClick={fetchAiSummary}>Summary</TabsTrigger>
+                </TabsList>
+                <TabsContent value="spendOverTime">
+                    <MonthlySpend
+                        selectedKpi={selectedKpi}
+                        selectedIndex={selectedIndex}
+                        setSelectedIndex={setSelectedIndex}
+                        filterCreditCards={filterCreditCards}
+                    />
+                    <br />
+                    <SumSpend
+                        selectedKpi={selectedKpi}
+                        selectedIndex={selectedIndex}
+                        setSelectedIndex={setSelectedIndex}
+                        filterCreditCards={filterCreditCards}
+                    />
+                </TabsContent>
+                <TabsContent value="spendByCategory">
+                    <TopPurchaseCategory />
+                    <br />
+                    <TransactionsByCategory />
+                </TabsContent>
+                <TabsContent value="recurringSpend">
+                    <SpendByChannel />
+                    <br />
+                    <RecurringTransaction />
+                </TabsContent>
+                <TabsContent value="summary">
+                    <br />
+                    <Text className="mt-1">AI generated summary</Text>
+                    <br />
+                    <Summary />
+                </TabsContent>
+            </Tabs>
+          
+                {/* <TabGroup className="">
                     <TabList
                         color="slate"
                         className="justify-center align-items-center w-[calc(100vw_-_theme(spacing.16))] sm:w-full"
@@ -284,8 +312,7 @@ export default function Charts() {
                             <Summary />
                         </TabPanel>
                     </TabPanels>
-                </TabGroup>
-            </Card>
+                </TabGroup> */}
             <br />
         </main>
     );

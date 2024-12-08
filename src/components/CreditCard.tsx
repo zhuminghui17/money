@@ -1,3 +1,5 @@
+import React from 'react';
+
 const CreditCardComponent = () => {
     return (
         <div className="p-6 bg-white rounded-xl shadow-md max-w-xl mx-auto mt-5">

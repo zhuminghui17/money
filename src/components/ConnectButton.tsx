@@ -7,27 +7,26 @@ import { setPlaidState } from "@/store/actions/usePlaid";
 import apiCall from "@/utils/apiCall";
 import { setUserInfoState } from "@/store/actions/useUser";
 import { isEmpty } from "@/utils/util";
+import { RootState } from "@/store";
+import { AnyAction } from 'redux';
+import { Dispatch } from 'redux';
 
-const ConnectButton = ({ children, type, setShowConnectModal }) => {
-    const { linkToken } = useSelector(state => state.plaid);
-    const { items: linkInfo } = useSelector(state => state.user);
+const ConnectButton = ({ children, type, setShowConnectModal }: { children: React.ReactNode, type: string | number, setShowConnectModal: (show: boolean) => void }) => {
+    const { linkToken } = useSelector((state: RootState) => state.plaid);
+    const { items: linkInfo } = useSelector((state: RootState) => state.user);
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<Dispatch<AnyAction>>();
 
     const onSuccess = useCallback(
-        (public_token, metadata) => {
+        (public_token: any, metadata: any) => {
             const exchangePublicTokenForAccessToken = async () => {
                 const response = await apiCall.post("/api/v1/plaid/set_access_token", { public_token, metadata, type });
                 if (response.status !== 200) {
-                    dispatch(
-                        setPlaidState({
-                            isItemAccess: false
-                        })
-                    );
+                    dispatch(setPlaidState({ isItemAccess: false }) as unknown as AnyAction);
                     return;
                 }
                 const { isItemAccess, item_id, accounts } = response.data;
-                dispatch(setPlaidState({ isItemAccess: isItemAccess }));
+                dispatch(setPlaidState({ isItemAccess: isItemAccess }) as unknown as AnyAction);
                 if (!isEmpty(item_id)) {
                     dispatch(
                         setUserInfoState({
@@ -50,7 +49,7 @@ const ConnectButton = ({ children, type, setShowConnectModal }) => {
     const { open, ready } = usePlaidLink(config);
 
     const handleOpenPlaidLink = () => {
-        dispatch(setPlaidState({ isItemAccess: false, linkSuccess: false }));
+        dispatch(setPlaidState({ isItemAccess: false, linkSuccess: false }) as unknown as AnyAction);
         open();
     };
 

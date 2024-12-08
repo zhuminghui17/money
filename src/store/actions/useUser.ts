@@ -12,8 +12,9 @@ import {
 import { handleError, isEmpty } from "@/utils/util";
 import { toast } from "react-hot-toast";
 import { allTransactionSync } from "@/store/actions/useTransaction";
+import { User } from "@/lib/types";
 
-export const getUserInfo = data => async dispatch => {
+export const getUserInfo = (data: {}) => async (dispatch: any) => {
     const res = await apiCall.get("/api/v1/user", data);
 
     if (!isEmpty(res.data.items) && res.data.isPro) dispatch(allTransactionSync());
@@ -21,14 +22,14 @@ export const getUserInfo = data => async dispatch => {
     dispatch(setUserInfoState(res.data));
 };
 
-export const setUserInfoState = payload => {
+export const setUserInfoState = (payload: { items?: any; isAccountsLoaded?: boolean; }) => {
     return {
         type: SET_USER_INFO,
         payload
     };
 };
 
-export const deleteItemInfoById = item_id => async dispatch => {
+export const deleteItemInfoById = (item_id: string) => async (dispatch: (arg0: { type: string; payload: any; }) => void) => {
     try {
         await apiCall.delete(`/api/v1/user/item/${item_id}`);
         dispatch({
@@ -41,7 +42,7 @@ export const deleteItemInfoById = item_id => async dispatch => {
     }
 };
 
-export const updateUserInfo = userInfo => async dispatch => {
+export const updateUserInfo = (userInfo: User) => async (dispatch: (arg0: { type: string; payload: any; }) => void) => {
     try {
         await apiCall.post("/api/v1/user", { userInfo });
         dispatch({
@@ -54,7 +55,7 @@ export const updateUserInfo = userInfo => async dispatch => {
     }
 };
 
-export const getDashboardData = () => async dispatch => {
+export const getDashboardData = () => async (dispatch: (arg0: { type: string; payload: any; }) => void) => {
     try {
         const res = await apiCall.get("/api/v1/user/dashboard");
         dispatch({
@@ -66,7 +67,7 @@ export const getDashboardData = () => async dispatch => {
     }
 };
 
-export const getChartsData = data => async dispatch => {
+export const getChartsData = (data: { filterDate: any; selectedAccounts: any; }) => async (dispatch: (arg0: { type: string; payload: any; }) => void) => {
     try {
         const res = await apiCall.post("/api/v1/user/charts", data);
         dispatch({
@@ -78,28 +79,28 @@ export const getChartsData = data => async dispatch => {
     }
 };
 
-export const setUserDashboardAISummary = data => async dispatch => {
+export const setUserDashboardAISummary = (data: any) => async (dispatch: (arg0: { type: string; payload: any; }) => void) => {
     dispatch({
         type: SET_DASHBOARD_AI_SUMMARY,
         payload: data
     });
 };
 
-export const setUserAnalyzeAISummary = data => async dispatch => {
+export const setUserAnalyzeAISummary = (data: string) => async (dispatch: (arg0: { type: string; payload: any; }) => void) => {
     dispatch({
         type: SET_ANALYZE_AI_SUMMARY,
         payload: data
     });
 };
 
-export const setAnalyzeFilterDate = data => async dispatch => {
+export const setAnalyzeFilterDate = (data: any) => async (dispatch: (arg0: { type: string; payload: any; }) => void) => {
     dispatch({
         type: SET_ANALYZE_FILTER_DATE,
         payload: data
     });
 };
 
-export const setAnalyzeSelectedAccounts = data => async dispatch => {
+export const setAnalyzeSelectedAccounts = (data: any[]) => async (dispatch: (arg0: { type: string; payload: any; }) => void) => {
     dispatch({
         type: SET_SELECTED_ACCOUNTS,
         payload: data

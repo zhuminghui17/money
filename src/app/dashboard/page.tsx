@@ -214,7 +214,6 @@ export default function Dashboard() {
                 icon={item.type === "credit" ? CreditCardIcon : CurrencyDollarIcon}
                 size="sm"
                 className="mr-2"
-                color="slate"
               />
               <Title className="font-semibold">{item.institutionName} • {item.subtype}</Title>
             </Flex>
@@ -266,7 +265,6 @@ export default function Dashboard() {
                   variant="light"
                   icon={ArrowNarrowRightIcon}
                   iconPosition="right"
-                  color="slate"
                 >
                   View in Explorer
                 </Button>
@@ -284,7 +282,7 @@ export default function Dashboard() {
                       color="slate"
                       className="mr-4"
                     /> */}
-                    <Text>Top Spend Categories</Text>
+                    <p>Top Spend Categories</p>
                   </Flex>
                 </AccordionTrigger>
                 <AccordionContent className="w-full">
@@ -306,7 +304,7 @@ export default function Dashboard() {
                       color="slate"
                       className="mr-4"
                     /> */}
-                    <Text>Recent Transactions</Text>
+                    <p>Recent Transactions</p>
                   </Flex>
                 </AccordionTrigger>
                 <AccordionContent>
@@ -366,7 +364,7 @@ export default function Dashboard() {
             ))}
           </Grid>
           <div className="mt-4">
-            {dashboardSummary?.length > 10 ? (
+            {/* {dashboardSummary?.length > 10 ? (
               convertedItems.length >= 2 ? (
                 <Accordion type="single" collapsible className="w-full mt-2" defaultValue="account-summary">
                   <AccordionItem value="account-summary">
@@ -389,7 +387,7 @@ export default function Dashboard() {
               ) : null
             ) : (
               <Text>Analyzing recent activity... </Text>
-            )}
+            )} */}
           </div>
         </>
       ) : null}
@@ -415,7 +413,6 @@ export default function Dashboard() {
           <Icon
             tooltip={`Connect multiple bank accounts and credit cards to get a consolidated view of all your finances. To connect an account, click "Connect" in the dropdown menu located in the top right icon of Navigation menu.`}
             variant="light"
-            color="slate"
             icon={CheckCircleIcon}
             size="sm"
             className="mr-4"
@@ -423,7 +420,7 @@ export default function Dashboard() {
           Connect An Account
         </Title>
         <Text className="mt-2">
-          Get a bird's eye view of your finances by connecting your bank accounts and credit cards.
+          Get a bird&apos;s eye view of your finances by connecting your bank accounts and credit cards.
         </Text>
         <div className="mt-4">
           <ConnectButtonModal />
@@ -432,7 +429,7 @@ export default function Dashboard() {
       <Grid numItemsSm={2} className="w-full gap-6 mt-6">
         {categories.map((item, index) => (
           <Card key={`category_${index}`} className="p-4">
-            <Icon variant="light" icon={item.icon} size="sm" color="slate" />
+            <Icon variant="light" icon={item.icon} size="sm" />
             <Title className="mt-6">{item.title}</Title>
             <Text className="mt-2">{item.text}</Text>
             <Flex className="pt-4 mt-6 border-t">

@@ -9,13 +9,11 @@ async function GPT4(info, key) {
         {
             role: "system",
             content:
-                "You are personal finance assistant. It's your job to write two short paragraphs containing insights for me to understand my financial position overall. KPIS are live account data and includes the data from last check in. Accounts have all my connected accounts (checkings, credit cards, etc)" 
+                "You are personal finance assistant. It's your job to write two short paragraphs containing insights for me to understand my financial position overall. KPIS are live account data and includes the data from last check in. Accounts have all my connected accounts (checkings, credit cards, etc). Provide insights by not just summarizing account balances but instead, providing meaningful analysis for me to take action and reflect on my current financial position. Include overview of balances, changes and a profile based on my spend." 
         },
         {
             role: "user",
-            content:
-                "Provide insights by not just summarizing account balances but instead, providing meaningful analysis for me to take action and recent insights that affect my current financial position. Include overview of balances, changes and a profile based on my spend." +
-                info
+            content: info
         }
     ];
 
@@ -33,12 +31,9 @@ async function GPT4(info, key) {
 const handler = async (req, res) => {
     try {
         const { data } = req.body;
-        // const { user } = await getFullUserInfo();
-
-        // const aiSummaryResponse = await GPT4(data, user.openAiKey);
+        const { user } = await getFullUserInfo();
+        console.log(user);
         const aiSummaryResponse = await GPT4(data, process.env.OPENAI_API_KEY);
-
-        // return new StreamingTextResponse(aiSummaryResponse);
         return NextResponse.json({ message: aiSummaryResponse.message.content }, { status: 200 });
     } catch (err) {
         return NextResponse.json({ message: err?.error?.message }, { status: 403 });

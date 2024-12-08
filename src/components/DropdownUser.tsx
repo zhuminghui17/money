@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
@@ -17,18 +18,18 @@ const DropdownUser = () => {
     const { data } = useSession();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [showConnectModal, setShowConnectModal] = useState(false);
-    const trigger = useRef(null);
-    const dropdown = useRef(null);
+    const trigger = useRef<HTMLAnchorElement>(null);
+    const dropdown = useRef<HTMLDivElement>(null);
     const dispatch = useDispatch();
 
     // close on click outside
     useEffect(() => {
-        const clickHandler = ({ target }) => {
+        const clickHandler = ({ target }: { target: EventTarget | null }) => {
             if (!dropdown.current) return;
             if (
                 !dropdownOpen ||
-                dropdown.current.contains(target) ||
-                trigger.current.contains(target)
+                dropdown.current.contains(target as Node) ||
+                trigger.current?.contains(target as Node)
             )
                 return;
             setDropdownOpen(false);
@@ -39,16 +40,15 @@ const DropdownUser = () => {
 
     // close if the esc key is pressed
     useEffect(() => {
-        const keyHandler = ({ keyCode }) => {
+        const keyHandler = ({ keyCode }: { keyCode: number }) => {
             if (!dropdownOpen || keyCode !== 27) return;
             setDropdownOpen(false);
         };
         document.addEventListener("keydown", keyHandler);
         return () => document.removeEventListener("keydown", keyHandler);
     });
-
     const refreshTransactions = () => {
-        dispatch(allTransactionSync());
+        dispatch(allTransactionSync() as any);
     };
 
     return (
@@ -192,7 +192,7 @@ const DropdownUser = () => {
                 </ul>
                 <button
                     className="flex items-center gap-3.5 px-7 py-5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-                    onClick={signOut}
+                    onClick={() => signOut()}
                 >
                     <svg
                         className="fill-current"
