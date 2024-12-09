@@ -1,5 +1,5 @@
 # AI Personal Finance Dashboard
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). This project utilizes Plaid and OpenAI technologies as well as modern UI to unlock insights into your spending and transactions.
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). This project utilizes Plaid and OpenAI technologies as well as modern UI to unlock insights into your spending and transactions. Simply clone and deploy with your own .env for your very own private Mint App clone, boosted with AI.
 
 ![image](https://github.com/user-attachments/assets/7a299ded-228d-4eca-a9f6-0687f412a167)
 
