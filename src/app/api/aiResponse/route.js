@@ -1,5 +1,5 @@
 import { OpenAI } from "openai";
-// import { getFullUserInfo } from "@/app/actions/user";
+import { getFullUserInfo } from "@/app/actions/user";
 import { NextResponse } from "next/server";
 
 async function GPT4(info, key) {
@@ -32,8 +32,8 @@ const handler = async (req, res) => {
     try {
         const { data } = req.body;
         const { user } = await getFullUserInfo();
-        console.log(user);
-        const aiSummaryResponse = await GPT4(data, process.env.OPENAI_API_KEY);
+        const aiSummaryResponse = await GPT4(JSON.stringify(user), process.env.OPENAI_API_KEY);
+        console.log(aiSummaryResponse);
         return NextResponse.json({ message: aiSummaryResponse.message.content }, { status: 200 });
     } catch (err) {
         return NextResponse.json({ message: err?.error?.message }, { status: 403 });

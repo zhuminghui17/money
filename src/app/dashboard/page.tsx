@@ -363,8 +363,25 @@ export default function Dashboard() {
               </Card>
             ))}
           </Grid>
+        </>
+      ) : null}
+      <div className="mt-4">
+        <Flex justifyContent="start">
+          <Title>Synced Accounts ({items.length})</Title>
+        </Flex>
+      </div>
+      {convertedItems && convertedItems.length > 0 ? (
+        <>
+          <div className="mt-4 w-full">
+            <AccountCards items={convertedItems} />
+          </div>
+          <Flex className="pt-4 mt-6 border-t">
+            <Button size="xs" variant="light" icon={ArrowNarrowRightIcon} iconPosition="right" color="slate">
+              Refresh data (balance & transactions)
+            </Button>
+          </Flex>
           <div className="mt-4">
-            {/* {dashboardSummary?.length > 10 ? (
+            {dashboardSummary?.length > 10 ? (
               convertedItems.length >= 2 ? (
                 <Accordion type="single" collapsible className="w-full mt-2" defaultValue="account-summary">
                   <AccordionItem value="account-summary">
@@ -387,25 +404,8 @@ export default function Dashboard() {
               ) : null
             ) : (
               <Text>Analyzing recent activity... </Text>
-            )} */}
+            )}
           </div>
-        </>
-      ) : null}
-      <div className="mt-4">
-        <Flex justifyContent="start">
-          <Title>Synced Accounts ({items.length})</Title>
-        </Flex>
-      </div>
-      {convertedItems && convertedItems.length > 0 ? (
-        <>
-          <div className="mt-4 w-full">
-            <AccountCards items={convertedItems} />
-          </div>
-          <Flex className="pt-4 mt-6 border-t">
-            <Button size="xs" variant="light" icon={ArrowNarrowRightIcon} iconPosition="right" color="slate">
-              Refresh data (balance & transactions)
-            </Button>
-          </Flex>
         </>
       ) : null}
       <Card className="p-4 mt-6">
