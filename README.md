@@ -9,14 +9,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - `transactions` Rich Datagrid to browse transactions and filter by time-range, spend category & more
 - `charts` Shadcn charts to analyze monthly and recurring spend
 - `chat` Chat with GPT-4o to ask Q&A about your accounts & financial position (Vercel AI SDK)
-
-![GIF 1](https://utfs.io/f/zFhXe4KhKijB8gRkQEvugWbotXPBHqTdLMzUAswxYvSa3QVc)
-![GIF 2](https://utfs.io/f/zFhXe4KhKijBKWw6Iz2xzmkLlYMVtjB96H5N8rFTPGfW30Qw)
-![GIF 3](https://utfs.io/f/zFhXe4KhKijBbviuC8Ufcg2aCmBG94ERO7AJ6XqnMoQKUdLb)
 ![screenrun-12-10-2024-04-08-48](https://github.com/user-attachments/assets/ca2bbdf4-d1b4-48cb-8881-0da60cc13ee3)
-
-
-  
 
 ## Getting Started
 
