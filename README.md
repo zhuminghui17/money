@@ -1,29 +1,23 @@
 # AI Personal Finance Dashboard
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). This project utilizes Plaid and OpenAI technologies as well as modern UI to unlock insights into your spending and transactions. Simply clone and deploy with your own .env for your very own private Mint App clone, boosted with AI.
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). This project utilizes `Plaid` and `OpenAI` technologies as well as modern UI to unlock insights into your spending and transactions. Simply clone and deploy with your own Plaid Developer API Key to host a private Mint App clone, boosted with `Vercel AI SDK` & `Generative UI`. Take it forward, contribute or commercialize - go nuts.
 
-![image](https://github.com/user-attachments/assets/7a299ded-228d-4eca-a9f6-0687f412a167)
+![image](https://github.com/user-attachments/assets/ead20473-a381-4424-bdb0-cf666a6a7cd1)
+![screenrun-12-10-2024-03-35-21 (1) (1)](https://github.com/user-attachments/assets/cf46f89f-3284-47f2-9b2c-6365aa3db8ec)
 
 ## Key Features
-- Overview of account and card balances
-- Rich Datagrid to browse transactions and filter by time-range, spend category & more
-- Shadcn charts to analyze monthly and recurring spend
-- AI Chat to ask Q&A about your accounts & financial position (Vercel AI SDK)
+- `/dashboard` Connect Debit / Checkings, Savings, Credit Cards & Investment (Robinhood) accounts. Review live account balances.
+- `transactions` Rich Datagrid to browse transactions and filter by time-range, spend category & more
+- `charts` Shadcn charts to analyze monthly and recurring spend
+- `chat` Chat with GPT-4o to ask Q&A about your accounts & financial position (Vercel AI SDK)
 
-![image](https://github.com/user-attachments/assets/ec6117ee-d254-45a7-81d4-82964ee78de0)
+![GIF 1](https://utfs.io/f/zFhXe4KhKijB8gRkQEvugWbotXPBHqTdLMzUAswxYvSa3QVc)
+![GIF 2](https://utfs.io/f/zFhXe4KhKijBKWw6Iz2xzmkLlYMVtjB96H5N8rFTPGfW30Qw)
+![GIF 3](https://utfs.io/f/zFhXe4KhKijBbviuC8Ufcg2aCmBG94ERO7AJ6XqnMoQKUdLb)
+![screenrun-12-10-2024-04-08-48](https://github.com/user-attachments/assets/ca2bbdf4-d1b4-48cb-8881-0da60cc13ee3)
 
-![image](https://github.com/user-attachments/assets/baa2efb1-6a52-4a1c-a0bb-a1f44db703c1)
-
-![image](https://github.com/user-attachments/assets/aee2360d-c048-44c4-85e7-4b04b7c1d9ee)
-
-![image](https://github.com/user-attachments/assets/1068740c-2fc2-4d79-9555-43e779c6c424)
-
-![image](https://github.com/user-attachments/assets/bc89ed94-4124-4a1a-9e67-10ad1fc607ea)
-
-![image](https://github.com/user-attachments/assets/c96ad59a-3101-4881-83d0-6e48046d9e36)
-
-![image](https://github.com/user-attachments/assets/60771323-653e-4180-82ec-a24a36e4a83a)
 
   
+
 ## Getting Started
 
 First, run the development server:
@@ -58,3 +52,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![screenrun-12-10-2024-03-32-18](https://github.com/user-attachments/assets/bd238347-4293-47d3-8a04-40750f3b4ad7)
