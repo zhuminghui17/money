@@ -2,14 +2,16 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). This project utilizes `Plaid` and `OpenAI` technologies as well as modern UI to unlock insights into your spending and transactions. Simply clone and deploy with your own Plaid Developer API Key to host a private Mint App clone, boosted with `Vercel AI SDK` & `Generative UI`. Take it forward, contribute or commercialize - go nuts.
 
 ![image](https://github.com/user-attachments/assets/ead20473-a381-4424-bdb0-cf666a6a7cd1)
-![screenrun-12-10-2024-03-35-21 (1) (1)](https://github.com/user-attachments/assets/cf46f89f-3284-47f2-9b2c-6365aa3db8ec)
+
 
 ## Key Features
 - `/dashboard` Connect Debit / Checkings, Savings, Credit Cards & Investment (Robinhood) accounts. Review live account balances.
+  ![screenrun-12-10-2024-03-35-21 (1) (1)](https://github.com/user-attachments/assets/cf46f89f-3284-47f2-9b2c-6365aa3db8ec)
 - `transactions` Rich Datagrid to browse transactions and filter by time-range, spend category & more
+  ![screenrun-12-10-2024-04-21-37 (1)](https://github.com/user-attachments/assets/a0d862b1-b599-406f-ab65-bf3ed4fe071d)
 - `charts` Shadcn charts to analyze monthly and recurring spend
 - `chat` Chat with GPT-4o to ask Q&A about your accounts & financial position (Vercel AI SDK)
-![screenrun-12-10-2024-04-08-48](https://github.com/user-attachments/assets/ca2bbdf4-d1b4-48cb-8881-0da60cc13ee3)
+  ![screenrun-12-10-2024-04-08-48](https://github.com/user-attachments/assets/ca2bbdf4-d1b4-48cb-8881-0da60cc13ee3)
 
 ## Getting Started
 
