@@ -2,13 +2,16 @@ import { useSelector } from "react-redux";
 import {
     BarList
 } from "@tremor/react";
+import { RootState } from "@/store";
 
 const SpendCategory = ({
     searchQuery
+}: {
+    searchQuery: string
 }) => {
     const {
         donutAsBarData,
-    } = useSelector(state => state.user);
+    } = useSelector((state: RootState) => state.user);
 
     const barListChartConfig = {
         value: {
@@ -27,7 +30,7 @@ const SpendCategory = ({
     return (
         <div className="relative mt-4 h-[74vh] overflow-y-auto overflow-x-hidden py-20">
             <BarList
-                data={donutAsBarData.filter(item => 
+                data={donutAsBarData.filter((item: { name: string | null; }) => 
                     item.name !== null && 
                     item.name
                         .toLowerCase()
@@ -35,7 +38,6 @@ const SpendCategory = ({
                 )}
                 className="mr-4 sm:min-w-full"
                 showAnimation={true}
-                showtooltip={true}
             />
         </div>
     )

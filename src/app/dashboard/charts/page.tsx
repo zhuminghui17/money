@@ -219,101 +219,26 @@ export default function Charts() {
                 </Select>
             </div>
             <br />
-            <Tabs defaultValue="spendOverTime" className="w-full">
-                <TabsList className="w-full border">
-                    <TabsTrigger className="w-full" value="spendOverTime">Spend over time</TabsTrigger>
-                    <TabsTrigger className="w-full" value="spendByCategory">Spend by category</TabsTrigger>
-                    <TabsTrigger className="w-full" value="recurringSpend">Recurring spend</TabsTrigger>
-                    <TabsTrigger className="w-full" value="summary" onClick={fetchAiSummary}>Summary</TabsTrigger>
-                </TabsList>
-                <TabsContent value="spendOverTime">
-                    <MonthlySpend
-                        selectedKpi={selectedKpi}
-                        selectedIndex={selectedIndex}
-                        setSelectedIndex={setSelectedIndex}
-                        filterCreditCards={filterCreditCards}
-                    />
-                    <br />
-                    <SumSpend
-                        selectedKpi={selectedKpi}
-                        selectedIndex={selectedIndex}
-                        setSelectedIndex={setSelectedIndex}
-                        filterCreditCards={filterCreditCards}
-                    />
-                </TabsContent>
-                <TabsContent value="spendByCategory">
-                    <TopPurchaseCategory />
-                    <br />
-                    <TransactionsByCategory />
-                </TabsContent>
-                <TabsContent value="recurringSpend">
+            <div className="flex flex-col gap-4 mb-24">
+                <MonthlySpend
+                    selectedKpi={selectedKpi}
+                    selectedIndex={selectedIndex}
+                    setSelectedIndex={setSelectedIndex}
+                    filterCreditCards={filterCreditCards}
+                />
+                {/* <SumSpend
+                    selectedKpi={selectedKpi}
+                    selectedIndex={selectedIndex}
+                    setSelectedIndex={setSelectedIndex}
+                    filterCreditCards={filterCreditCards}
+                /> */}
+                <TopPurchaseCategory />
+                {/* <TransactionsByCategory /> */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <SpendByChannel />
-                    <br />
                     <RecurringTransaction />
-                </TabsContent>
-                <TabsContent value="summary">
-                    <br />
-                    <Text className="mt-1">AI generated summary</Text>
-                    <br />
-                    <Summary />
-                </TabsContent>
-            </Tabs>
-          
-                {/* <TabGroup className="">
-                    <TabList
-                        color="slate"
-                        className="justify-center align-items-center w-[calc(100vw_-_theme(spacing.16))] sm:w-full"
-                    >
-                        <Tab className="w-full px-0 sm:p-4 justify-center text-center">
-                            <p className="text-sm break-word sm:text-base whitespace-break-spaces ">Spend over time</p>
-                        </Tab>
-                        <Tab className="w-full px-0 sm:p-4 justify-center text-center">
-                            <p className="text-sm break-word sm:text-base whitespace-break-spaces text-center">Spend by category</p>
-                        </Tab>
-                        <Tab className="w-full px-0 sm:p-4 justify-center text-center">
-                            <p className="text-sm break-word sm:text-base whitespace-break-spaces text-center">
-                                Recurring spend
-                            </p>
-                        </Tab>
-                        <Tab className="w-full justify-center px-0 sm:p-4" onClick={fetchAiSummary}>
-                            <p className="text-sm break-word sm:text-base whitespace-break-spaces text-center">Summary</p>
-                        </Tab>
-                    </TabList>
-                    <TabPanels>
-                        <TabPanel className="px-0 py-4 sm:px-4">
-                            <MonthlySpend
-                                selectedKpi={selectedKpi}
-                                selectedIndex={selectedIndex}
-                                setSelectedIndex={setSelectedIndex}
-                                filterCreditCards={filterCreditCards}
-                            />
-                            <br />
-                            <SumSpend
-                                selectedKpi={selectedKpi}
-                                selectedIndex={selectedIndex}
-                                setSelectedIndex={setSelectedIndex}
-                                filterCreditCards={filterCreditCards}
-                            />
-                        </TabPanel>
-                        <TabPanel className="px-0 py-4 sm:px-4">
-                            <TopPurchaseCategory />
-                            <br />
-                            <TransactionsByCategory />
-                        </TabPanel>
-                        <TabPanel className="px-0 py-4 sm:px-4">
-                            <SpendByChannel />
-                            <br />
-                            <RecurringTransaction />
-                        </TabPanel>
-                        <TabPanel>
-                            <br />
-                            <Text className="mt-1">AI generated summary</Text>
-                            <br />
-                            <Summary />
-                        </TabPanel>
-                    </TabPanels>
-                </TabGroup> */}
-            <br />
+                </div>
+            </div>
         </main>
     );
 }

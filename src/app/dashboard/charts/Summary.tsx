@@ -1,21 +1,21 @@
 import {
     Card,
-    Text,
-} from "@tremor/react";
+    CardHeader,
+    CardTitle,
+    CardDescription,
+} from "@/components/ui/card";
 import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
 
-const Summary = () => {
-    const {
-        analyzeSummary,
-    } = useSelector(state => state.user);
-
+const Summary = (): JSX.Element => {
+    const { analyzeSummary } = useSelector((state: RootState) => state.user);
     return (
         <Card>
             <pre className="max-w-full overflow-x-auto font-sans whitespace-pre-wrap">
-                <Text>{analyzeSummary}</Text>
+                <p>{analyzeSummary}</p>
             </pre>
             <br />
-            {analyzeSummary?.length < 50 ? ( // replace with better way to tell when response is ready to stream. Show below svg while we wait. Loading from public causes issues in deployment use svg directly.
+            {analyzeSummary?.length < 50 ? (
                 <svg
                     width="38"
                     height="38"

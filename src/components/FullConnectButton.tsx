@@ -16,7 +16,7 @@ const ConnectButtonModal = () => {
     return (
         <div>
             <button
-                className="inline-flex items-center border rounded-xl justify-center h-8 w-full px-4 border py-2 text-sm font-medium transition-colors rounded-md shadow-md cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 hover:bg-secondary/90 hover:text-primary disabled:bg-primary/90"
+                className="inline-flex items-center border rounded-xl justify-center h-8 w-full px-4 py-2 text-sm font-medium shadow-md cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 hover:bg-secondary/90 hover:text-primary disabled:bg-primary/90"
                 onClick={() => {
                     setShowConnectModal(true);
                 }}

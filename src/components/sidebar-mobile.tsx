@@ -15,7 +15,7 @@ export function SidebarMobile({ children }: SidebarMobileProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" className="absolute flex size-9 p-0 lg:hidden">
+        <Button variant="ghost" className="absolute flex size-9 p-0 hidden lg:flex">
           <IconSidebar className="size-6" />
           <span className="sr-only">Toggle Sidebar</span>
         </Button>

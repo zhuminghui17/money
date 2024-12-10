@@ -561,7 +561,7 @@ const getPaymentChannelData = async (search_data) => {
 
   const formattedData = Object.entries(groupedData).map(([paymentChannel, data]) => ({
     name: `${paymentChannel} (${data.count})`,
-    value: data.value,
+    value: Math.round(data.value * 100) / 100,
     count: data.count,
   }));
 

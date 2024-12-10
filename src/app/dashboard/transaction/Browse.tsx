@@ -12,15 +12,11 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart";
-import {
-    Card,
-    Text,
-    // LineChart,
-} from "@tremor/react";
+import { Card } from "@/components/ui/card";
 import { editDateProperty } from "../../../utils/util";
 import { RootState } from "@/store";
 
-const Browe = () => {
+const TransactionChart = () => {
     const chartConfig: ChartConfig = useMemo(() => ({
         amount: {
             label: "Amount",
@@ -40,16 +36,20 @@ const Browe = () => {
     const reversedTransactions = useMemo(() => editDateProperty([...transactions].reverse()), [transactions]);
 
     return (
-        <Card className="relative w-full mt-6 overflow-auto">
-            <Text>Browse transactions over time </Text>
+        <Card className="relative max-w-full overflow-hidden p-8">
+            <p className="text-md">Browse transactions over time </p>
             <br />
-            <ChartContainer className="h-72 w-full" config={chartConfig}>
+            <ChartContainer className="w-full h-40" config={chartConfig}>
                 <LineChart
+                    width={100}
+                    height={100}
                     accessibilityLayer
                     data={reversedTransactions}
                     margin={{
                         left: 12,
                         right: 12,
+                        top: 12,
+                        bottom: 12
                     }}
                 >
                     <CartesianGrid vertical={false} />
@@ -95,30 +95,15 @@ const Browe = () => {
                     />
                     <Line
                         dataKey="amount"
-                        type="natural"
-                        stroke="var(--color-amount)"
+                        type="linear"
+                        stroke="green"
                         strokeWidth={2}
                         dot={false}
                     />
                 </LineChart>
             </ChartContainer>
-            {/* <LineChart
-                data={reversedTransactions}
-                index={"date"}
-                showAnimation={true}
-                startEndOnly={true}
-                showtooltip={true}
-                connectNulls={true}
-                autoMinValue={true}
-                showGradient={true}
-                showLegend={false}
-                showGridLines={true}
-                categories={["amount", "name", "category"]}
-                curveType="monotone"
-                yAxisWidth={50}
-            /> */}
         </Card>
     )
 }
 
-export default Browe
+export default TransactionChart;

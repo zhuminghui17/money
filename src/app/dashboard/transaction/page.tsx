@@ -3,37 +3,24 @@
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getPaymentTransaction } from "@/store/actions/useTransaction";
-import SearchInput from "@/components/Basic/SearchInput";
-import { InformationCircleIcon } from "@heroicons/react/solid";
 import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
+import { Card, CardContent } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem } from "@/components/ui/select";
 import {
-    Card,
-    Title,
     Text,
-    Flex,
-    Icon,
     MultiSelect,
     MultiSelectItem,
-    Select,
-    SelectItem,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeaderCell,
-    TableRow,
-    Badge,
     NumberInput,
     Divider
 } from "@tremor/react";
-import { Metric, Grid } from "@tremor/react";
 import { dateFormat, handleError, isEmpty } from "@/utils/util";
 import { getAllCategories } from "@/store/actions/usePlaid";
 import { useSearchParams } from "next/navigation";
 import { valueFormatter } from "@/utils/util";
-import Browse from "./Browe";
+import TransactionChart from "./Browse";
 import { AppDispatch, RootState } from "@/store";
 import { Account, Item, Transaction } from "@/lib/types";
+import ModernTable from "./Table";
 
 type AccountMap = { [key: string]: string };
 
@@ -54,6 +41,127 @@ function formatCurrencyValue(value: number) {
     }
 }
 
+interface FilterSectionProps {
+    categories: string[];
+    personalFinanceCategories: string[];
+    items: Item[];
+    selectedCategories: string[];
+    setSelectedCategories: (categories: string[]) => void;
+    selectedFinCategories: string[];
+    setSelectedFinCategories: (categories: string[]) => void;
+    selectedAccounts: string[];
+    setSelectedAccounts: (accounts: string[]) => void;
+    selectedPaymentChannel: string | null;
+    setSelectedPaymentChannel: (channel: string) => void;
+    filterDate: { startDate: string | null; endDate: string | null };
+    setFilterDate: (date: { startDate: string | null; endDate: string | null }) => void;
+    merchantName: string;
+    setMerchantName: (name: string) => void;
+    priceRange: { minPrice: string; maxPrice: string };
+    setPriceRange: (range: { minPrice: string; maxPrice: string }) => void;
+    fetchData: (page: number) => void;
+}
+
+function FilterSection({
+    categories,
+    personalFinanceCategories,
+    items,
+    selectedCategories,
+    setSelectedCategories,
+    selectedFinCategories,
+    setSelectedFinCategories,
+    selectedAccounts,
+    setSelectedAccounts,
+    selectedPaymentChannel,
+    setSelectedPaymentChannel,
+    filterDate,
+    setFilterDate,
+    merchantName,
+    setMerchantName,
+    priceRange,
+    setPriceRange,
+    fetchData
+}: FilterSectionProps) {
+    return (
+        <div className="flex flex-col justify-end space-y-2 md:space-y-0 md:flex-row md:space-x-2">
+            <MultiSelect
+                className="w-full text-primary"
+                onValueChange={setSelectedAccounts}
+                value={selectedAccounts}
+                placeholder="Select Accounts..."
+            >
+                {items?.map((item: Item) => {
+                    return item?.accounts?.map((account: Account) => (
+                        <MultiSelectItem key={account.account_id} value={account.account_id} className="text-primary">
+                            {account.name}
+                        </MultiSelectItem>
+                    ));
+                })}
+            </MultiSelect>
+            
+            <MultiSelect
+                className="w-full text-primary"
+                defaultValue={["all"]}
+                onValueChange={(value) => setSelectedPaymentChannel(value[1])}
+                value={selectedPaymentChannel ? [selectedPaymentChannel] : ["all"]}
+            >
+                    {[
+                        { value: "all", label: "All Payment Channel" },
+                        { value: "online", label: "Online Channel" },
+                        { value: "in store", label: "In Store Channel" }, 
+                        { value: "investment", label: "Investment" },
+                        { value: "other", label: "Other Channel" }
+                    ].map((item) => (
+                        <MultiSelectItem key={item.value} value={item.value}>
+                            {item.label}
+                        </MultiSelectItem>
+                    ))}
+            </MultiSelect>
+
+            <Datepicker
+                containerClassName="relative w-full"
+                inputClassName="w-full text-sm outline-none text-left whitespace-nowrap truncate rounded-tremor-default focus:ring-2 transition duration-100 shadow-tremor-input focus:border-tremor-brand-subtle focus:ring-tremor-brand-muted dark:shadow-dark-tremor-input dark:focus:border-dark-tremor-brand-subtle dark:focus:ring-dark-tremor-brand-muted pl-3 pr-8 py-2 border bg-tremor-background dark:bg-dark-tremor-background hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis border-tremor-border dark:border-dark-tremor-border"
+                useRange={true}
+                showShortcuts={true}
+                value={{
+                    startDate: filterDate.startDate ? new Date(filterDate.startDate) : null,
+                    endDate: filterDate.endDate ? new Date(filterDate.endDate) : null,
+                }}
+                onChange={(value: DateValueType, e?: HTMLInputElement | null) => {
+                    const newFilterDate = {
+                        startDate: value?.startDate ? value.startDate.toISOString() : null,
+                        endDate: value?.endDate ? value.endDate.toISOString() : null,
+                    };
+                    setFilterDate(newFilterDate);
+                }}
+                configs={{
+                    shortcuts: {
+                        past: period => `Last ${period} days`,
+                        currentMonth: "This month",
+                        pastMonth: "Last month",
+                        yearFromToday: {
+                            text: "Year from today",
+                            period: {
+                                start: new Date(
+                                    new Date().setFullYear(new Date().getFullYear() - 1)
+                                ),
+                                end: new Date()
+                            }
+                        },
+                        yearToDate: {
+                            text: "Year to date",
+                            period: {
+                                start: new Date(new Date().getFullYear(), 0, 1),
+                                end: new Date()
+                            }
+                        }
+                    }
+                }}
+            />
+        </div>
+    );
+}
+
 export default function Transactions() {
     const dispatch = useDispatch<AppDispatch>();
     const searchParams = useSearchParams();
@@ -63,11 +171,15 @@ export default function Transactions() {
     const { data: transactions, size: total } = useSelector((state: RootState) => state.transactions);
     const { items, annualTransactionData } = useSelector((state: RootState) => state.user);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-    const [selectedFinCategories, setSelectedFinCategories] = useState(
-        isEmpty(searchParams.get("financeCategory")) ? [] : searchParams.get("financeCategory")?.split(",")
+    const [selectedFinCategories, setSelectedFinCategories] = useState<string[]>(
+        isEmpty(searchParams.get("financeCategory")) 
+            ? [] 
+            : searchParams.get("financeCategory")?.split(",") || []
     );
-    const [selectedAccounts, setSelectedAccounts] = useState(
-        isEmpty(searchParams.get("accounts")) ? [] : searchParams.get("accounts")?.split(",")
+    const [selectedAccounts, setSelectedAccounts] = useState<string[]>(
+        isEmpty(searchParams.get("accounts")) 
+            ? [] 
+            : searchParams.get("accounts")?.split(",") || []
     );
     const [selectedPaymentChannel, setSelectedPaymentChannel] = useState<string | null>(
         isEmpty(searchParams.get("channel")) ? "all" : searchParams.get("channel") || null
@@ -92,14 +204,12 @@ export default function Transactions() {
     const [showFilters, setShowFilters] = useState(true);
     // Initialize merchantName before using it in fetchData
     const [merchantName, setMerchantName] = useState("");
-    const [isOpen, setIsOpen] = useState(false);
 
     // Function to toggle the visibility
     const toggleFilters = () => {
         setShowFilters(!showFilters);
     };
-    const openModal = () => setIsOpen(true);
-    const closeModal = () => setIsOpen(false); //add code to export to downloads (pdf, csv, json)
+  
     // fetch data
     const fetchData = useCallback(
         (newCurPage: number) => {
@@ -215,218 +325,46 @@ export default function Transactions() {
     ];
 
     return (
-        <main className="min-h-screen p-4 m-auto max-w-7xl">
-            {showFilters && (
-                <Grid numItemsSm={3} className="gap-6">
-                    {kpis?.map((item, index) => (
-                        <Card key={"kpis" + index} className="max-w-md mx-auto">
-                            <Flex className="space-x-8">
-                                <Text>{item.title}</Text>
-                            </Flex>
-                            <Flex className="space-x-3" justifyContent="start" alignItems="baseline">
-                                <Metric>{item.metric}</Metric>
-                            </Flex>
-                        </Card>
-                    ))}
-                </Grid>
+        <main className="min-h-screen p-2 sm:p-4 m-auto max-w-7xl">
+             {showFilters && (
+                <FilterSection
+                    categories={categories}
+                    personalFinanceCategories={personalFinanceCategories}
+                    items={items}
+                    selectedCategories={selectedCategories}
+                    setSelectedCategories={setSelectedCategories}
+                    selectedFinCategories={selectedFinCategories}
+                    setSelectedFinCategories={setSelectedFinCategories}
+                    selectedAccounts={selectedAccounts}
+                    setSelectedAccounts={setSelectedAccounts}
+                    selectedPaymentChannel={selectedPaymentChannel}
+                    setSelectedPaymentChannel={setSelectedPaymentChannel}
+                    filterDate={filterDate}
+                    setFilterDate={setFilterDate}
+                    merchantName={merchantName}
+                    setMerchantName={setMerchantName}
+                    priceRange={priceRange}
+                    setPriceRange={setPriceRange}
+                    fetchData={fetchData}
+                />
             )}
-            <br />
+            <div className="my-4 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6">
+                {kpis?.map((item, index) => (
+                    <Card key={"kpis" + index} className="w-full mx-auto border rounded-lg p-4">
+                        <div className="space-y-2">
+                            <p className="text-md">{item.title}</p>
+                            <div className="text-lg font-medium">{item.metric}</div>
+                        </div>
+                    </Card>
+                ))}
+            </div>
+            {/* Graph */}
+            {showFilters && <TransactionChart />}
             <Divider>
-                <button onClick={toggleFilters}>{showFilters ? "Hide filters" : "Show filters"}</button>
+                <button onClick={toggleFilters}>{showFilters ? "Hide chart" : "Show chart"}</button>
             </Divider>
-            <br />
-            {showFilters && (<Card className="relative w-full p-3 mt-6 md:p-6">
-                        <div>
-                            <Flex className="space-x-0.5" justifyContent="start" alignItems="center">
-                                <Title>Filters</Title>
-                                <Icon
-                                    icon={InformationCircleIcon}
-                                    variant="simple"
-                                    color="gray"
-                                    tooltip="Browse all your transactions. Data fetched from Plaid, look up to 2 years back."
-                                />
-                            </Flex>
-                        </div>
-                        <div className="md:space-x-2 md:flex">
-                            <SearchInput
-                                className="max-w-full mb-2 sm:max-w-xs md:mb-0"
-                                placeholder="Search transactions..."
-                                value={merchantName}
-                                onChange={(e: any) => setMerchantName(e.target.value)}
-                                onSearch={fetchData}
-                            />
-                             {categories && <MultiSelect
-                                className="max-w-full mb-2 sm:max-w-xs md:mb-0"
-                                onValueChange={setSelectedCategories}
-                                placeholder="Select Category..."
-                            >
-                                {categories?.map((item: string) => (
-                                    <MultiSelectItem key={item} value={item}>
-                                        {item !== null ? item : "Uncategorized"}
-                                    </MultiSelectItem>
-                                ))}
-                            </MultiSelect> }
-                            <Select
-                                className="flex-1 mb-2 md:mb-0"
-                                defaultValue="all"
-                                onValueChange={setSelectedPaymentChannel}
-                                value={selectedPaymentChannel ?? undefined}
-                            >
-                                <SelectItem value="all">All Payment Channel</SelectItem>
-                                <SelectItem value="online">Online Channel</SelectItem>
-                                <SelectItem value="in store">In Store Channel</SelectItem>
-                                <SelectItem value="investment">Investment</SelectItem>
-                                <SelectItem value="other">Other Channel</SelectItem>
-                            </Select>
-
-                            <Datepicker
-                                containerClassName="relative flex-2 text-gray-700 min-w-[15rem]"
-                                inputClassName="w-full text-sm outline-none text-left whitespace-nowrap truncate rounded-tremor-default focus:ring-2 transition duration-100 shadow-tremor-input focus:border-tremor-brand-subtle focus:ring-tremor-brand-muted dark:shadow-dark-tremor-input dark:focus:border-dark-tremor-brand-subtle dark:focus:ring-dark-tremor-brand-muted pl-3 pr-8 py-2 border bg-tremor-background dark:bg-dark-tremor-background hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis border-tremor-border dark:border-dark-tremor-border"
-                                useRange={true}
-                                showShortcuts={true}
-                                value={{
-                                    startDate: filterDate.startDate ? new Date(filterDate.startDate) : null,
-                                    endDate: filterDate.endDate ? new Date(filterDate.endDate) : null,
-                                  }}
-                                onChange={(value: DateValueType, e?: HTMLInputElement | null) => {
-                                    const newFilterDate = {
-                                        startDate: value?.startDate ? value.startDate.toISOString() : null,
-                                        endDate: value?.endDate ? value.endDate.toISOString() : null,
-                                    };
-                                
-                                    // Update the state using setFilterDate
-                                    setFilterDate(newFilterDate);
-                                }}
-                                configs={{
-                                    shortcuts: {
-                                        // today: "Today",
-                                        // yesterday: "Yesterday",
-                                        past: period => `Last ${period} days`,
-                                        currentMonth: "This month",
-                                        pastMonth: "Last month",
-                                        yearFromToday: {
-                                            text: "Year from today",
-                                            period: {
-                                                start: new Date(
-                                                    new Date().setFullYear(new Date().getFullYear() - 1)
-                                                ),
-                                                end: new Date()
-                                            }
-                                        },
-                                        yearToDate: {
-                                            text: "Year to date",
-                                            period: {
-                                                start: new Date(new Date().getFullYear(), 0, 1),
-                                                end: new Date()
-                                            }
-                                        }
-                                    }
-                                }}
-                            />
-                        </div>
-                        <div className="items-center mt-2 md:flex">
-                            <MultiSelect
-                                className="max-w-full mb-2 mr-2 sm:max-w-xs md:mb-0"
-                                onValueChange={setSelectedAccounts}
-                                value={selectedAccounts}
-                                placeholder="Select Accounts..."
-                            >
-                                {items?.map((item: Item) => {
-                                    return item?.accounts?.map((account: Account) => (
-                                        <MultiSelectItem key={account.account_id} value={account.account_id}>
-                                            {account.name}
-                                        </MultiSelectItem>
-                                    ));
-                                })}
-                            </MultiSelect>
-                            <MultiSelect
-                                className="max-w-full mr-2 sm:max-w-xs md:mb-0"
-                                onValueChange={setSelectedFinCategories}
-                                value={selectedFinCategories}
-                                placeholder="Select Financial Category..."
-                            >
-                                {personalFinanceCategories?.map((item: string) => (
-                                    <MultiSelectItem key={item} value={item}>
-                                        {item}
-                                    </MultiSelectItem>
-                                ))}
-                            </MultiSelect>
-                            <div className="flex w-full mt-2 md:mt-0">
-                                <NumberInput
-                                    className="min-w-[2rem] md:min-w-[5rem] md:w-[10rem] mr-2"
-                                    enableStepper={false}
-                                    placeholder="Min Price"
-                                    value={priceRange?.minPrice}
-                                    onChange={e =>
-                                        setPriceRange({
-                                            ...priceRange,
-                                            minPrice: e.target.value
-                                        })
-                                    }
-                                    onSubmit={fetchData}
-                                />
-                                <NumberInput
-                                    className="min-w-[2rem] md:min-w-[5rem] md:w-[10rem]"
-                                    enableStepper={false}
-                                    placeholder="Max Price"
-                                    value={priceRange?.maxPrice}
-                                    onChange={e =>
-                                        setPriceRange({
-                                            ...priceRange,
-                                            maxPrice: e.target.value
-                                        })
-                                    }
-                                    onSubmit={fetchData}
-                                />
-                            </div>
-                        </div>
-                        </Card>
-                )}
-                
-                <br />
-                { showFilters && <Browse />}
-                <br />
-                <Card className="relative w-full p-3 mt-6 md:p-6">
-                <>
-                    <Table className="w-[calc(100vw_-_theme(spacing.16))] sm:w-full mt-6 overflow-auto">
-                        <TableHead>
-                            <TableRow>
-                                <TableHeaderCell className="">Date</TableHeaderCell>
-                                <TableHeaderCell className="text-left ">Name</TableHeaderCell>
-                                <TableHeaderCell className="text-left ">Amount</TableHeaderCell>
-                                <TableHeaderCell className="text-left ">Category</TableHeaderCell>
-                            </TableRow>
-                        </TableHead>
-
-                        <TableBody>
-                            {transactions?.map((item: Transaction, index: number) => (
-                                <TableRow key={"transaction_" + index}>
-                                    <TableCell>{dateFormat(item.date)}</TableCell>
-                                    <TableCell className="max-w-[10rem] overflow-hidden text-left text-ellipsis">
-                                        {item.name}
-                                    </TableCell>
-                                    <TableCell className="text-left">
-                                        {valueFormatter(item.amount)}
-                                        {/* ({item.iso_currency_code}) */}
-                                    </TableCell>
-                                    <TableCell className="flex flex-wrap justify-start max-w-[5rem] text-left">
-                                        {item.category?.map(categoryItem => (
-                                            <Badge
-                                                color="slate"
-                                                key={"categoryItem_" + categoryItem}
-                                                tooltip={item.personal_finance_category?.detailed || categoryItem}
-                                            >
-                                                {categoryItem}
-                                            </Badge>
-                                        ))}
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </>
-                <br />
-            </Card>
+            {/* Table */}
+            <ModernTable transactions={transactions} />
             <br />
         </main>
     );

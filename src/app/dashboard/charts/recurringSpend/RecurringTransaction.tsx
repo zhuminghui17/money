@@ -1,8 +1,6 @@
 import { useState, Fragment } from "react";
 import { useSelector } from "react-redux";
 import {
-    Button,
-    Card,
     Flex,
     Title,
     Text,
@@ -10,17 +8,21 @@ import {
     BarList,
     TextInput,
 } from "@tremor/react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
     SearchIcon,
     ArrowsExpandIcon,
+    ArrowRightIcon,
 } from "@heroicons/react/solid";
 import { Dialog, Transition } from "@headlessui/react";
 import RecurringSpend from "./RecurringSpend";
+import { RootState } from "@/store";
 
 const RecurringTransaction = () => {
     const {
         barListData
-    } = useSelector(state => state.user);
+    } = useSelector((state: RootState) => state.user);
 
     const [isOpen, setIsOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
@@ -32,7 +34,7 @@ const RecurringTransaction = () => {
 
     return (
         <>
-            <Card>
+            <Card className="bg-background p-6">
                 <Title>Recurring Transactions</Title>
                 <Flex className="mt-4">
                     <Text>
@@ -43,18 +45,18 @@ const RecurringTransaction = () => {
                     </Text>
                 </Flex>
                 <BarList
-                    data={barListData.slice(0, 10)}
+                    data={barListData.slice(0, 3)}
                     className="mt-2 overflow-visible whitespace-normal text-overflow sm:w-full"
-                    showtooltip={true}
                     showAnimation={true}
+                    color={"emerald"}
                 />
                 <Button
-                    icon={ArrowsExpandIcon}
                     className="w-full mt-4"
+                    variant="outline"
                     onClick={openModal}
-                    color="slate"
                 >
                     Show more
+                    <ArrowRightIcon className="w-4 h-4" />
                 </Button>
             </Card>
             <Transition appear show={isOpen} as={Fragment}>

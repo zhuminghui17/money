@@ -36,8 +36,8 @@ const Navbar = () => {
 
     return (
         <nav
-            className={`fixed bottom-0 flex flex-row items-center justify-around w-full border-t sm:hidden bg-gradient-to-b from-background/10 via-background/50 to-background/80 backdrop-blur-xl ${
-                pathname.includes("/dashboard/chat") ? "pl-12" : ""
+            className={`fixed flex flex-row items-center justify-around w-full border-t sm:hidden bg-gradient-to-b from-background/10 via-background/50 to-background/80 backdrop-blur-xl ${
+                pathname.includes("/dashboard/chat") ? "pl-12" : "bottom-0"
             }`}
         >
             {navItems.map((item, index) => {

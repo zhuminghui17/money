@@ -12,13 +12,14 @@ import {
 import {
     ArrowNarrowRightIcon,
 } from "@heroicons/react/solid";
+import { RootState } from "@/store";
 
 const TransactionsByCategory = () => {
     const {
         chartDataByMonth,
         filterDate,
         selectedAccounts,
-    } = useSelector(state => state.user);
+    } = useSelector((state: RootState) => state.user);
 
     return (
         <Card>
@@ -36,7 +37,6 @@ const TransactionsByCategory = () => {
                 data={chartDataByMonth.slice(0, 10)}
                 className="mt-2 overflow-visible whitespace-normal text-overflow sm:w-full"
                 showAnimation={true}
-                showtooltip={true}
             />
             <Flex className="pt-4">
                 <Link

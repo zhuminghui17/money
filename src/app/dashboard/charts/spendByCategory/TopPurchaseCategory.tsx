@@ -1,13 +1,13 @@
 import { useState, useMemo, Fragment } from "react";
 import { useSelector } from "react-redux";
 import {
-    Button,
     Card,
     Flex,
     Title,
     Text,
     TextInput,
 } from "@tremor/react";
+import { Button } from "@/components/ui/button";
 import { Label, Pie, PieChart } from "recharts";
 import {
     ChartContainer,
@@ -19,30 +19,31 @@ import {
 import { Dialog, Transition } from "@headlessui/react";
 import {
     SearchIcon,
-    ArrowsExpandIcon
+    ArrowsExpandIcon,
+    ArrowRightIcon
 } from "@heroicons/react/solid";
 import { usNumberformatter } from "@/utils/util";
 import SpendCategory from "./SpendCategory";
 
 const colors = [
-    "#d64161",
-    "#feb236",
-    "#ff7b25",
-    "#b5e7a0",
-    "#e3eaa7",
-    "#86af49",
-    "#eca1a6",
-    "#ada397",
-    "#f7cac9",
-    "#92a8d1",
-    "#034f84",
-    "#80ced6",
+    "#004d00", // Darkest green
+    "#006600",
+    "#008000",
+    "#009900",
+    "#00b300",
+    "#00cc00",
+    "#00e600",
+    "#00ff00", // Pure green
+    "#33ff33",
+    "#66ff66", 
+    "#99ff99",
+    "#ccffcc"  // Lightest green
 ];
 
 const TopPurchaseCategory = () => {
     const {
         donutChartData,
-    } = useSelector(state => state.user);
+    } = useSelector((state: { user: { donutChartData: any[] } }) => state.user);
 
     const [searchQuery, setSearchQuery] = useState("");
     const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +53,7 @@ const TopPurchaseCategory = () => {
         setIsOpen(false);
     };
 
-    const chartConfig = useMemo(() => donutChartData.filter(item => item && item.name !== null).reduce((acc, item, idx) => {
+    const chartConfig = useMemo(() => donutChartData.filter((item: { name: null; }) => item && item.name !== null).reduce((acc: { [x: string]: { label: any; color: string; }; }, item: { name: string; }, idx: number) => {
         acc[item.name.replace(/\s+/g, '')] = {
             label: item.name,
             color: colors[idx % 12],
@@ -60,9 +61,9 @@ const TopPurchaseCategory = () => {
         return acc;
     }, {}), [donutChartData])
 
-    const totalPercent = useMemo(() => donutChartData.filter(item => item && item.name !== null).reduce((sum, item) => sum + item.percent, 0), [donutChartData])
+    const totalPercent = useMemo(() => donutChartData.filter((item: { name: null; }) => item && item.name !== null).reduce((sum: any, item: { percent: any; }) => sum + item.percent, 0), [donutChartData])
 
-    const chartData = useMemo(() => donutChartData.filter(item => item && item.name !== null).map((item) => ({
+    const chartData = useMemo(() => donutChartData.filter((item: { name: null; }) => item && item.name !== null).map((item: { name: string; }) => ({
         ...item,
         name: item.name.replace(/\s+/g, ''),
         fill: `var(--color-${item.name.replace(/\s+/g, '')})`
@@ -121,12 +122,12 @@ const TopPurchaseCategory = () => {
                     </ChartContainer>
                     <br />
                     <Button
-                        color="slate"
-                        icon={ArrowsExpandIcon}
-                        className="w-full mt-2"
+                        variant="outline"
+                        className="w-full mt-4"
                         onClick={openModal}
                     >
                         Show more
+                        <ArrowRightIcon className="w-4 h-4" />
                     </Button>
                 </div>
                 <Transition appear show={isOpen} as={Fragment}>
