@@ -19,6 +19,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 ![screenrun-12-11-2024-06-43-42](https://github.com/user-attachments/assets/77b656a5-53c4-4a32-9336-ba600550bbee)
 
 - NEW `Custom GPT Integration` Serve secure endpoints to inferace with Plaid & ChatGPT. Utilize the pre-populated OpenAPI specification and securely chat with your account and transactions data in ChatGPT.
+  
+![Screenshot 2024-12-11 at 12 13 18 PM](https://github.com/user-attachments/assets/ebc01580-9eee-40ac-a5ae-13a46ea34078)
 
 ## Roadmap / Future Plans
 - [ ] Add more charts
