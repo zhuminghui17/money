@@ -10,6 +10,7 @@ import { isEmpty } from "@/utils/util";
 import { RootState } from "@/store";
 import { AnyAction } from 'redux';
 import { Dispatch } from 'redux';
+import { Button } from "./ui/button";
 
 const ConnectButton = ({ children, type, setShowConnectModal }: { children: React.ReactNode, type: string | number, setShowConnectModal: (show: boolean) => void }) => {
     const { linkToken } = useSelector((state: RootState) => state.plaid);
@@ -54,13 +55,12 @@ const ConnectButton = ({ children, type, setShowConnectModal }: { children: Reac
     };
 
     return (
-        <button
-            className="inline-flex items-center justify-center h-8 px-4 py-2 text-sm font-medium transition-colors rounded-md shadow-md cursor-pointer ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-primary/90"
+        <Button
             onClick={handleOpenPlaidLink}
             disabled={!ready || isEmpty(linkToken)}
         >
             {children}
-        </button>
+        </Button>
     );
 };
 

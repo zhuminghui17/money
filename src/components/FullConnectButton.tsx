@@ -7,23 +7,24 @@ import {
     DialogHeader,
     DialogTitle
 } from "./ui/dialog";
-import { RefreshCcw } from "lucide-react";
+import { PlusCircleIcon, PlusIcon } from "lucide-react";
 import ConnectButton from "./ConnectButton";
-
+import { Button } from "./ui/button";
 const ConnectButtonModal = () => {
     const [showConnectModal, setShowConnectModal] = useState(false);
 
     return (
         <div>
-            <button
-                className="inline-flex items-center border rounded-xl justify-center h-8 w-full px-4 py-2 text-sm font-medium shadow-md cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 hover:bg-secondary/90 hover:text-primary disabled:bg-primary/90"
+            <Button
+                className="mt-4 p-4 inline-flex items-center border rounded-md justify-center w-full font-medium shadow-md cursor-pointer focus-visible:outline-none focus-visible:ring-2 hover:bg-emerald-900 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:bg-primary/90"
                 onClick={() => {
                     setShowConnectModal(true);
                 }}
+                variant="outline"
             >
-                <RefreshCcw className="w-[22px] mr-2" />
-                Connect
-            </button>
+                <PlusCircleIcon className="w-[22px] mr-2" />
+                Add Bank Accounts, Credit Cards, or Investment Accounts
+            </Button>
             <Dialog
             modal={false}
             open={showConnectModal}

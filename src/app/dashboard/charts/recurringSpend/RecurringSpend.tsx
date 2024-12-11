@@ -2,21 +2,26 @@ import { useSelector } from "react-redux";
 import {
     BarList,
 } from "@tremor/react";
+import { FC } from 'react';
 
-function filterAndSortBarListData(barListData, searchQuery) {
-    const filteredData = barListData.filter(item => item.name !== null && item.name.toLowerCase().includes(searchQuery.toLowerCase()));
+function filterAndSortBarListData(barListData: any[], searchQuery: string) {
+    const filteredData = barListData.filter((item: { name: string | null; }) => item.name !== null && item.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    const sortedFilteredData = filteredData.sort((a, b) => a.value > b.value);
+    const sortedFilteredData = filteredData.sort((a: { value: number; }, b: { value: number; }) => a.value - b.value);
 
     return sortedFilteredData;
 }
 
-const RecurringSpend = ({
+interface RecurringSpendProps {
+    searchQuery: string;
+}
+
+const RecurringSpend: FC<RecurringSpendProps> = ({
     searchQuery
 }) => {
     const {
         barListData
-    } = useSelector(state => state.user);
+    } = useSelector((state: any) => state.user);
 
     const filteredpages = filterAndSortBarListData(barListData, searchQuery);
 
@@ -26,7 +31,6 @@ const RecurringSpend = ({
                 data={filteredpages}
                 className="mr-4 sm:min-w-full"
                 showAnimation={true}
-                showtooltip={true}
             />
         </div>
     )

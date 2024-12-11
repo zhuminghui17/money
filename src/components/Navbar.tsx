@@ -26,12 +26,12 @@ const Navbar = () => {
             label: "Chat",
             href: "/dashboard/chat"
         },
+        // {
+        //     label: "Analyze",
+        //     href: "/dashboard/charts"
+        // },
         {
-            label: "Analyze",
-            href: "/dashboard/charts"
-        },
-        {
-            label: "Browse",
+            label: "Explore",
             href: "/dashboard/transaction"
         }
     ];

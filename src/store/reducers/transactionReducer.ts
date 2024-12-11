@@ -5,6 +5,7 @@ import {
 
 const initialState = {
 	data: [],
+	size: 0,
 };
 
 interface Action {

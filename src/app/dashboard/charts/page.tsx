@@ -1,23 +1,15 @@
 "use client";
 
-import {
-    Card,
-    Text,
-    Tab,
-    TabList,
-    TabGroup,
-    TabPanels,
-    TabPanel,
-    Select, 
-    SelectItem,
-    MultiSelect,
-    MultiSelectItem
-} from "@tremor/react";
 
+import { addDays, format } from "date-fns"
+import { MultiSelect } from "@/components/ui/combobox"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Select, SelectContent, SelectItem } from "@/components/ui/select"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalculatorIcon, BookOpenIcon } from "@heroicons/react/outline";
 import { useCallback, useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Datepicker from "react-tailwindcss-datepicker";
 import { handleError } from "@/utils/util";
 import {
     getChartsData,
@@ -28,15 +20,11 @@ import {
 import { getDashboardData } from "@/store/actions/useUser";
 import { getAIResponse } from "@/hooks/actions";
 import MonthlySpend from "./spendOverTime/MonthlySpend";
-import SumSpend from './spendOverTime/SumSpend';
-import TransactionsByCategory from "./spendByCategory/TransactionsByCategory";
 import TopPurchaseCategory from "./spendByCategory/TopPurchaseCategory";
 import SpendByChannel from "./recurringSpend/SpendByChannel";
 import RecurringTransaction from "./recurringSpend/RecurringTransaction";
-import Summary from "./Summary";
 import { AppDispatch, RootState } from "@/store";
 import { Item } from "@/lib/types";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Kpis = {
     Spend: "spend",
@@ -165,79 +153,106 @@ export default function Charts() {
 
     return (
         <main className="min-h-screen p-2 m-auto max-w-7xl">
-            <div className="mt-4 w-full block sm:flex justify-end">
-                <Datepicker
-                    containerClassName="relative w-full md:mr-1 h-full"
-                    inputClassName="w-full p-2 text-sm outline-none text-left whitespace-nowrap truncate rounded-tremor-default focus:ring-2 transition duration-100 shadow-tremor-input focus:border-tremor-brand-subtle focus:ring-tremor-brand-muted dark:shadow-dark-tremor-input dark:focus:border-dark-tremor-brand-subtle dark:focus:ring-dark-tremor-brand-muted pl-3 pr-6 border bg-tremor-background dark:bg-dark-tremor-background hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis border-tremor-border dark:border-dark-tremor-border"
-                    useRange={true}
-                    showShortcuts={true}
-                    value={filterDate}
-                    onChange={handleSetFilterDate}
-                    configs={{
-                        shortcuts: {
-                            past: period => `Last ${period} days`,
-                            currentMonth: "This month",
-                            pastMonth: "Last month",
-                            yearFromToday: {
-                                text: "1 year back",
-                                period: {
-                                    start: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
-                                    end: new Date()
-                                }
-                            },
-                            yearToDate: {
-                                text: "Year-to-date",
-                                period: {
-                                    start: new Date(new Date().getFullYear(), 0, 1),
-                                    end: new Date()
-                                }
-                            }
-                        }
-                    }}
-                />
+            <div className="w-full block sm:flex justify-end">
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="outline"
+                            className="relative w-full md:mr-1 h-full text-left"
+                        >
+                            {filterDate.startDate ? (
+                                filterDate.endDate ? (
+                                    <>
+                                        {new Date(filterDate.startDate).toLocaleDateString()} -{" "}
+                                        {new Date(filterDate.endDate).toLocaleDateString()}
+                                    </>
+                                ) : (
+                                    new Date(filterDate.startDate).toLocaleDateString()
+                                )
+                            ) : (
+                                <span>Pick a date</span>
+                            )}
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                        <div className="p-4 grid grid-cols-2 gap-2">
+                            {[
+                                { label: "Last 7 Days", daysOffset: -7 },
+                                { label: "Last 14 Days", daysOffset: -14 },
+                                { label: "Last 30 Days", daysOffset: -30 },
+                                { label: "Last 60 Days", daysOffset: -60 },
+                                { label: "Last 90 Days", daysOffset: -90 },
+                                { label: "Last 365 Days", daysOffset: -365 },
+                            ].map(({ label, daysOffset }) => (
+                                <Button
+                                    key={label}
+                                    variant="outline"
+                                    onClick={() => {
+                                        const today = new Date();
+                                        const startDate = addDays(today, daysOffset);
+                                        setFilterDate({
+                                            startDate: startDate.toISOString(),
+                                            endDate: today.toISOString(),
+                                        });
+                                    }}
+                                >
+                                    {label}
+                                </Button>
+                            ))}
+                        </div>
+                        <Calendar
+                            initialFocus
+                            mode="range"
+                            defaultMonth={filterDate.startDate ? new Date(filterDate.startDate) : undefined}
+                            selected={{
+                                from: filterDate.startDate ? new Date(filterDate.startDate) : undefined,
+                                to: filterDate.endDate ? new Date(filterDate.endDate) : undefined,
+                            }}
+                            onSelect={(range) => {
+                                const newFilterDate = {
+                                    startDate: range?.from ? range.from.toISOString() : null,
+                                    endDate: range?.to ? range.to.toISOString() : null,
+                                };
+                                handleSetFilterDate(newFilterDate);
+                            }}
+                            numberOfMonths={2}
+                        />
+                    </PopoverContent>
+                </Popover>
                 <MultiSelect
-                    className="max-w-sm mt-1 md:mt-0 multiselect"
+                    options={items?.flatMap((item: Item) => item?.accounts?.map(account => ({
+                        value: account.account_id,
+                        label: account.name
+                    })))}
                     onValueChange={handleSetSelectedAccounts}
-                    value={selectedAccounts}
+                    defaultValue={selectedAccounts}
                     placeholder="Select Accounts..."
-                >
-                    {items?.map((item: Item) => {
-                        return item?.accounts?.map(account => (
-                            <MultiSelectItem key={account.account_id} value={account.account_id}>
-                                {account.name}
-                            </MultiSelectItem>
-                        ));
-                    })}
-                </MultiSelect>
-                <Select className="max-w-sm mt-1 md:mt-0 ml-1" value={filterCreditCards} onValueChange={setFilterCreditCards}>
-                    <SelectItem value={'true'} icon={CalculatorIcon}>
-                        Yes, filter credit payments out of spend
+                    variant="inverted"
+                    animation={2}
+                />
+                <Select value={filterCreditCards} onValueChange={setFilterCreditCards}>
+                    <SelectContent>
+                        <SelectItem value={'true'}>
+                            Yes, filter credit payments out of spend
                     </SelectItem>
-                    <SelectItem value={'false'} icon={BookOpenIcon}>
-                        No, include card payments in spend
-                    </SelectItem>
+                    <SelectItem value={'false'}>
+                            No, include card payments in spend
+                        </SelectItem>
+                    </SelectContent>
                 </Select>
             </div>
-            <br />
-            <div className="flex flex-col gap-4 mb-24">
+            <div className="mt-4 flex flex-col gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <TopPurchaseCategory />
+                    <SpendByChannel />
+                    <RecurringTransaction />
+                </div>
                 <MonthlySpend
                     selectedKpi={selectedKpi}
                     selectedIndex={selectedIndex}
                     setSelectedIndex={setSelectedIndex}
                     filterCreditCards={filterCreditCards}
                 />
-                {/* <SumSpend
-                    selectedKpi={selectedKpi}
-                    selectedIndex={selectedIndex}
-                    setSelectedIndex={setSelectedIndex}
-                    filterCreditCards={filterCreditCards}
-                /> */}
-                <TopPurchaseCategory />
-                {/* <TransactionsByCategory /> */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <SpendByChannel />
-                    <RecurringTransaction />
-                </div>
             </div>
         </main>
     );

@@ -80,7 +80,6 @@ export const getTransaction = async (filter) => {
     orderBy: {
       date: "desc"
     },
-    take: 10,
   });
   return { size: totalFilteredData, data };
 }

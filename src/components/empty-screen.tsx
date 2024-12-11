@@ -33,17 +33,6 @@ export function EmptyScreen() {
           </ExternalLink>
           .
         </p>
-        <br/>
-        <div className="leading-normal">
-        <pre>
-          <li>Whats my balance across accounts?</li>
-          <li>How much total credit do I have?</li>
-          <li>What transactions are recurring every month?</li>
-          <li>How much did I spend on food last month?</li>
-          <li>What are my top expenses?</li>
-          <li>Can I afford to buy a car with montly payment of $450?</li>
-        </pre>
-        </div>
 			</div>
 		</div>
   )

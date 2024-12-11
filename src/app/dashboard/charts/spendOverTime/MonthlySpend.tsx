@@ -10,6 +10,7 @@ import { dollarFormatter, numberFormatter, sumArray } from "../../../../utils/ut
 import { Info } from "lucide-react";
 import { ChartContainer, ChartTooltipContent, ChartTooltip } from "@/components/ui/chart";
 import { Title } from "@tremor/react";
+import { colors } from "@/lib/utils";
 
 interface MonthlySpendProps {
   selectedKpi: string;
@@ -32,11 +33,11 @@ const MonthlySpend: React.FC<MonthlySpendProps> = ({
     () => ({
       spend: {
         label: selectedKpi === "spend" ? "Spend" : "Count",
-        color: "#4c8f40",
+        color: colors[0],
       },
       moneyIn: {
         label: selectedKpi === "spend" ? "MoneyIn" : "MoneyInCount",
-        color: "#82ca9d",
+        color: colors[3],
       },
     }),
     [selectedKpi]
@@ -74,7 +75,7 @@ const MonthlySpend: React.FC<MonthlySpendProps> = ({
   const { averageMonthlySpend, avgTransaction } = calculatedAveragesMonthly;
 
   return (
-    <Card className="p-4">
+    <Card className="p-4 bg-background">
       <div className="md:flex justify-between">
         <div>
           <div className="flex items-center space-x-2">
@@ -96,7 +97,7 @@ const MonthlySpend: React.FC<MonthlySpendProps> = ({
             Avg {""}
             {selectedKpi === "spend"
               ? dollarFormatter(averageMonthlySpend)
-              : numberFormatter(avgTransaction)}
+              : numberFormatter(avgTransaction)} {" / month"}
           </h3>
           </div>
         </div>
@@ -113,7 +114,7 @@ const MonthlySpend: React.FC<MonthlySpendProps> = ({
         </Tabs>
       </div>
       <div className="mt-8 overflow-auto">
-        <ChartContainer className="mt-5 h-60 w-full" config={chartConfig}>
+        <ChartContainer className="mt-5 h-40 w-full" config={chartConfig}>
           <BarChart
             data={filterCreditCards ? monthlySpendNoCards : monthlySpend}
             margin={{

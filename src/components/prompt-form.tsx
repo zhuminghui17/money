@@ -17,6 +17,7 @@ import {
 import { useEnterSubmit } from '@/lib/hooks/use-enter-submit'
 import { nanoid } from 'nanoid'
 import { useRouter } from 'next/navigation'
+import { Plus, PlusCircle } from 'lucide-react'
 
 export function PromptForm({
   input,
@@ -77,7 +78,7 @@ export function PromptForm({
                 router.push('/dashboard/chat/new')
               }}
             >
-              <IconPlus />
+              <Plus className="size-2" />
               <span className="sr-only">New Chat</span>
             </Button>
           </TooltipTrigger>
@@ -101,8 +102,8 @@ export function PromptForm({
         <div className="absolute right-0 top-[13px] sm:right-4">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button type="submit" size="icon" disabled={input === ''}>
-                <IconArrowElbow />
+              <Button type="submit" size="icon" disabled={input === ''} className='bg-primary text-sm'>
+                <IconArrowElbow className='stroke-1 size-2 p-2' />
                 <span className="sr-only">Send message</span>
               </Button>
             </TooltipTrigger>

@@ -1,23 +1,39 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useMemo } from "react";
 import { useSelector } from "react-redux";
 import {
     Flex,
     Title,
     Text,
-    Bold,
-    BarList,
     TextInput,
 } from "@tremor/react";
+import { BarChart, Bar, CartesianGrid, XAxis, YAxis, LabelList } from "recharts";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
     SearchIcon,
-    ArrowsExpandIcon,
     ArrowRightIcon,
 } from "@heroicons/react/solid";
+import {
+    ChartConfig,
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+} from "@/components/ui/chart";
 import { Dialog, Transition } from "@headlessui/react";
 import RecurringSpend from "./RecurringSpend";
 import { RootState } from "@/store";
+import { colors } from "@/lib/utils";
+
+// Add chart configuration
+const chartConfig = {
+    amount: {
+        label: "Amount",
+        color: "hsl(var(--chart-1))",
+    },
+    label: {
+        color: "hsl(var(--background))",
+    },
+} satisfies ChartConfig;
 
 const RecurringTransaction = () => {
     const {
@@ -32,24 +48,65 @@ const RecurringTransaction = () => {
     };
     const openModal = () => setIsOpen(true);
 
+    const chartData = useMemo(() => 
+        barListData.slice(0, 3).map((item: { name: any; value: string; }) => ({
+            merchant: item.name,
+            amount: item.value,
+            fill: colors[barListData.indexOf(item) % 12]
+        }))
+    , [barListData]);
+
     return (
         <>
             <Card className="bg-background p-6">
                 <Title>Recurring Transactions</Title>
-                <Flex className="mt-4">
-                    <Text>
-                        <Bold>Merchant</Bold>
-                    </Text>
-                    <Text>
-                        <Bold>Total Spend</Bold>
-                    </Text>
-                </Flex>
-                <BarList
-                    data={barListData.slice(0, 3)}
-                    className="mt-2 overflow-visible whitespace-normal text-overflow sm:w-full"
-                    showAnimation={true}
-                    color={"emerald"}
-                />
+                <div className="mt-4">
+                    <ChartContainer config={chartConfig}>
+                        <BarChart
+                            data={chartData}
+                            layout="vertical"
+                            margin={{ left: 40, right: 40, top: 10, bottom: 10 }}
+                            width={500}
+                            height={200}
+                        >
+                            <CartesianGrid horizontal={false} />
+                            <YAxis
+                                dataKey="merchant"
+                                type="category"
+                                tickLine={false}
+                                axisLine={false}
+                            />
+                            <XAxis
+                                type="number"
+                                tickFormatter={(value) => `$${value}`}
+                            />
+                            <ChartTooltip
+                                cursor={false}
+                                content={<ChartTooltipContent indicator="line" />}
+                            />
+                            <Bar
+                                dataKey="amount"
+                                fill="var(--color-amount)"
+                                radius={4}
+                            >
+                                <LabelList
+                                    dataKey="merchant"
+                                    position="insideLeft"
+                                    offset={8}
+                                    className="fill-[--color-label]"
+                                    fontSize={12}
+                                />
+                                <LabelList
+                                    dataKey="amount"
+                                    position="right"
+                                    formatter={(value: any) => `$${value}`}
+                                    className="fill-foreground"
+                                    fontSize={12}
+                                />
+                            </Bar>
+                        </BarChart>
+                    </ChartContainer>
+                </div>
                 <Button
                     className="w-full mt-4"
                     variant="outline"

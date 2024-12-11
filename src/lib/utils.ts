@@ -87,3 +87,18 @@ export const getMessageFromCode = (resultCode: string) => {
       return 'Logged in!'
   }
 }
+
+export const colors = [
+  "#004d00", // Darkest green
+  "#006600",
+  "#008000",
+  "#009900",
+  "#00b300",
+  "#00cc00",
+  "#00e600",
+  "#00ff00", // Pure green
+  "#00ff66",
+  "#00ff99",
+  "#00ffcc",
+  "#00ffff", // Emerald
+];

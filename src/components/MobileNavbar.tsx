@@ -28,10 +28,10 @@ const Navbar = () => {
             label: "Explore",
             href: "/dashboard/transaction"
         },
-        {
-            label: "Analyze",
-            href: "/dashboard/charts"
-        }
+        // {
+        //     label: "Analyze",
+        //     href: "/dashboard/charts"
+        // }
     ];
 
     return (

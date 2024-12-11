@@ -4,7 +4,8 @@ import {
     CartesianGrid,
     Line,
     LineChart,
-    XAxis
+    XAxis,
+    YAxis
 } from "recharts";
 import {
     ChartConfig,
@@ -13,10 +14,10 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Card } from "@/components/ui/card";
-import { editDateProperty } from "../../../utils/util";
+import { editDateProperty } from "@/utils/util";
 import { RootState } from "@/store";
 
-const TransactionChart = () => {
+const TransactionChart = ({ button }: { button: React.ReactNode }) => {
     const chartConfig: ChartConfig = useMemo(() => ({
         amount: {
             label: "Amount",
@@ -37,8 +38,10 @@ const TransactionChart = () => {
 
     return (
         <Card className="relative max-w-full overflow-hidden p-8">
-            <p className="text-md">Browse transactions over time </p>
-            <br />
+            <div className="flex justify-between items-center">
+                <p className="text-md">Browse transactions over time </p>
+                {button}
+            </div>
             <ChartContainer className="w-full h-40" config={chartConfig}>
                 <LineChart
                     width={100}
@@ -55,6 +58,16 @@ const TransactionChart = () => {
                     <CartesianGrid vertical={false} />
                     <XAxis
                         dataKey="date"
+                        tickFormatter={(value) => {
+                            const date = new Date(value);
+                            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                        }}
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
+                    />
+                    <YAxis
+                        dataKey="amount"
                         tickLine={false}
                         axisLine={false}
                         tickMargin={8}

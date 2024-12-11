@@ -2,6 +2,7 @@
 
 import Navbar from "@/components/Navbar";
 import MobileNavbar from "@/components/MobileNavbar";
+import { Toaster } from "sonner";
 
 import { ReactNode } from "react";
 
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
                     <MobileNavbar />
                 </div>
             </div>
+            <Toaster />
         </>
     );
 }
