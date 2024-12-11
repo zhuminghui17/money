@@ -18,8 +18,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ![screenrun-12-11-2024-06-43-42](https://github.com/user-attachments/assets/77b656a5-53c4-4a32-9336-ba600550bbee)
 
+- NEW `Custom GPT Integration` Serve secure endpoints to inferace with Plaid & ChatGPT. Utilize the pre-populated OpenAPI specification and securely chat with your account and transactions data in ChatGPT.
+
 ## Roadmap / Future Plans
-- [X] OpenAI YAML action for Custom GPT
 - [ ] Add more charts
 - [ ] Budgeting feature like [RangerBudget](https://rangerbudget.com/)
 - [ ] Twilio integration for SMS notifications
