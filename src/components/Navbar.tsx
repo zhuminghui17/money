@@ -7,6 +7,8 @@ import DropdownUser from "./DropdownUser";
 import usePlaidInit from "@/hooks/usePlaidInit";
 import useGetTransactionsSync from "@/hooks/useGetTransactionsSync";
 import useGetAccounts from "@/hooks/useGetAccounts";
+import { Button } from "@/components/ui/button";
+import { GithubIcon } from "lucide-react";
 import { getUserInfo } from "@/store/actions/useUser";
 import { usePathname } from "next/navigation";
 import { Landmark } from "lucide-react";
@@ -103,7 +105,14 @@ const Navbar = () => {
                         )}
                     </div>
                     <div className="flex items-center gap-3">
-                        <ul className="flex items-center gap-2">
+                        <div className="items-center text-center">
+                            <Link href="https://github.com/cameronking4/shadcn-openai-plaid-dashboard">
+                                <Button variant="outline" className="p-1 mr-2 rounded-full">
+                                    <GithubIcon className="w-4 h-4 mx-2" />
+                                </Button>
+                            </Link>
+                        </div>
+                        <ul className="flex items-center gap-2 mr-2">
                             <DarkModeSwitcher />
                         </ul>
                         <DropdownUser />

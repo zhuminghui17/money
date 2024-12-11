@@ -6,12 +6,21 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Key Features
 - `/dashboard` Connect Debit / Checkings, Savings, Credit Cards & Investment (Robinhood) accounts. Review live account balances.
-- `transactions` Rich Datagrid to browse transactions and filter by time-range, spend category & more
-  ![screenrun-12-10-2024-04-21-37 (1)](https://github.com/user-attachments/assets/a0d862b1-b599-406f-ab65-bf3ed4fe071d)
-- `charts` Shadcn charts to analyze monthly and recurring spend
-  ![screenrun-12-10-2024-05-13-49](https://github.com/user-attachments/assets/648b96d1-e277-4e6c-899c-ba25676d68a4)
-- `chat` Chat with GPT-4o to ask Q&A about your accounts & financial position (Vercel AI SDK)
+- `transactions` Rich Datagrid to browse transactions and filter by time-range, spend category & more using shadcn data grid and popover filters.
+- `charts` Shadcn charts to analyze monthly and recurring spend.
+- `chat` Chat with GPT-4o to ask Q&A about your accounts & financial position. Renders generative UI cards using Vercel AI SDK.
+
   ![screenrun-12-10-2024-04-08-48](https://github.com/user-attachments/assets/ca2bbdf4-d1b4-48cb-8881-0da60cc13ee3)
+
+  ## Roadmap / Future Plans
+  - [ ] Add more charts
+  - [ ] Budgeting feature like [RangerBudget](https://rangerbudget.com/)
+  - [X] OpenAI YAML action for Custom GPT
+  - [ ] Twilio integration for SMS notifications
+  - [ ] Vapi or OpenAI realtime integration for voice AI
+  - [ ] Review Investments
+  - [ ] Check Credit Score
+  - [ ] Check Credit Card Rewards
 
 ## Getting Started
 

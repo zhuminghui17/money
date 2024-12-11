@@ -315,7 +315,7 @@ export default function Dashboard() {
   const spinner = (
     <svg
       fill="none"
-      stroke="currentColor"
+      stroke="2"
       strokeWidth="1.5"
       viewBox="0 0 24 24"
       strokeLinecap="round"

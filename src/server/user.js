@@ -291,6 +291,7 @@ export const getChartInfo = async (req) => {
   const chartDataByMonth = await getChartDataByMonth(search_data);
   const donutChartData = await getDonutChartData(filteredTxs, totalCountData);
   const donutAsBarData = await getDonutAsBarData(filteredTxs, totalCountData);
+  const githubGraph = await getGithubGraph();
 
   return {
     cumulativeSpend,
@@ -303,7 +304,36 @@ export const getChartInfo = async (req) => {
     donutChartData,
     donutAsBarData,
     totalCountData,
+    githubGraph,
   }
+}
+
+export const getGithubGraph = async () => {
+  const user = await getUserSession();
+  const transactions = await db.transaction.findMany({
+    where: { userId: user.id },
+  });
+
+  const formattedTransactions = transactions.map(transaction => ({
+    date: transaction.date,
+    amount: transaction.amount
+  }));
+
+  const groupedTransactions = formattedTransactions.reduce((acc, transaction) => {
+    const date = new Date(transaction.date);
+    const week = Math.floor((date.getTime() - new Date(date.getFullYear(), 0, 1).getTime()) / (7 * 24 * 60 * 60 * 1000));
+    const day = date.getDay();
+
+    if (!acc[week]) {
+      acc[week] = Array(7).fill(0);
+    }
+    acc[week][day] += transaction.amount;
+    return acc;
+  }, {});
+
+  const result = Array.from({ length: 52 }, (_, week) => groupedTransactions[week] || Array(7).fill(0));
+
+  return result;
 }
 
 export const getAllUsers = async (filter) => {

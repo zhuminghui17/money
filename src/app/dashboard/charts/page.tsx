@@ -25,6 +25,7 @@ import SpendByChannel from "./recurringSpend/SpendByChannel";
 import RecurringTransaction from "./recurringSpend/RecurringTransaction";
 import { AppDispatch, RootState } from "@/store";
 import { Item } from "@/lib/types";
+import GithubGraph from "./spendOverTime/GithubGraph";
 
 const Kpis = {
     Spend: "spend",
@@ -50,7 +51,8 @@ export default function Charts() {
         kpis,
         analyzeSummary,
         filterDate,
-        selectedAccounts
+        selectedAccounts,
+        githubGraph
     } = useSelector((state: RootState) => state.user);
     const { isTransactionsLoaded } = useSelector((state: RootState) => state.plaid);
     const [filterCreditCards, setFilterCreditCards] = useState('true');
@@ -152,13 +154,13 @@ export default function Charts() {
     };
 
     return (
-        <main className="min-h-screen p-2 m-auto max-w-7xl">
-            <div className="w-full block sm:flex justify-end">
+        <main className="min-h-screen px-4 py-6 sm:px-6 lg:px-8 m-auto max-w-7xl">
+            <div className="w-full space-y-2 sm:space-y-0 sm:flex sm:items-center sm:gap-2">
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button
                             variant="outline"
-                            className="relative w-full md:mr-1 h-full text-left"
+                            className="w-full sm:w-auto"
                         >
                             {filterDate.startDate ? (
                                 filterDate.endDate ? (
@@ -219,40 +221,49 @@ export default function Charts() {
                         />
                     </PopoverContent>
                 </Popover>
-                <MultiSelect
-                    options={items?.flatMap((item: Item) => item?.accounts?.map(account => ({
-                        value: account.account_id,
-                        label: account.name
-                    })))}
-                    onValueChange={handleSetSelectedAccounts}
-                    defaultValue={selectedAccounts}
-                    placeholder="Select Accounts..."
-                    variant="inverted"
-                    animation={2}
-                />
-                <Select value={filterCreditCards} onValueChange={setFilterCreditCards}>
-                    <SelectContent>
-                        <SelectItem value={'true'}>
-                            Yes, filter credit payments out of spend
-                    </SelectItem>
-                    <SelectItem value={'false'}>
-                            No, include card payments in spend
-                        </SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
-            <div className="mt-4 flex flex-col gap-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <TopPurchaseCategory />
-                    <SpendByChannel />
-                    <RecurringTransaction />
+                <div className="w-full sm:w-auto">
+                    <MultiSelect
+                        options={items?.flatMap((item: Item) => item?.accounts?.map(account => ({
+                            value: account.account_id,
+                            label: account.name
+                        })))}
+                        onValueChange={handleSetSelectedAccounts}
+                        defaultValue={selectedAccounts}
+                        placeholder="Select Accounts..."
+                        variant="inverted"
+                        animation={2}
+                    />
                 </div>
-                <MonthlySpend
-                    selectedKpi={selectedKpi}
-                    selectedIndex={selectedIndex}
-                    setSelectedIndex={setSelectedIndex}
-                    filterCreditCards={filterCreditCards}
-                />
+                <div className="w-full sm:w-auto">
+                    <Select value={filterCreditCards} onValueChange={setFilterCreditCards}>
+                        <SelectContent>
+                            <SelectItem value={'true'}>
+                                Yes, filter credit payments out of spend
+                            </SelectItem>
+                            <SelectItem value={'false'}>
+                                No, include card payments in spend
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+            <div className="mt-4 flex flex-col gap-4 max-w-full">
+                <div className="max-w-full">
+                    <GithubGraph data={githubGraph}/>
+                </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                        <TopPurchaseCategory />
+                        <SpendByChannel />
+                        <RecurringTransaction />
+                </div>
+                <div className="max-w-full">
+                    <MonthlySpend
+                        selectedKpi={selectedKpi}
+                        selectedIndex={selectedIndex}
+                        setSelectedIndex={setSelectedIndex}
+                        filterCreditCards={filterCreditCards}
+                    />
+                </div>
             </div>
         </main>
     );
