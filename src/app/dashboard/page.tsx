@@ -453,11 +453,11 @@ export default function Dashboard() {
                 <SheetHeader>
                   <SheetTitle>Custom GPT Setup Instructions</SheetTitle>
                   <SheetDescription>
-                    Step 1: 🔑 Define your own PUBLIC_API_KEY within your .env file. Use this API key value within the "x-api-key" parameter to secure the private endpoint.
+                    Step 1: 🔑 Define your own PUBLIC_API_KEY within your .env file. Use this API key value within the &quot;x-api-key&quot; parameter to secure the private endpoint.
                     <br /><br />
-                    Step 2: 🛠️ Go to ChatGPT and navigate to "My GPTs", then click Create New GPT. Navigate to the Configure tab and add a new action.
+                    Step 2: 🛠️ Go to ChatGPT and navigate to &quot;My GPTs&quot;, then click Create New GPT. Navigate to the Configure tab and add a new action.
                     <br /><br />
-                    Step 3: 📋 Copy and paste the following Import URL where it says "Import URL". This will paste your custom OpenAPI spec to interface with Plaid data.
+                    Step 3: 📋 Copy and paste the following Import URL where it says &quot;Import URL&quot;. This will paste your custom OpenAPI spec to interface with Plaid data.
                     <div className="flex justify-center gap-2 mt-4">
                       <Input value={`${window.location.origin}/api/public/user/${userId}/getGptSpec`} />
                       <Button onClick={handleClickCustomGPT}>

@@ -46,7 +46,7 @@ const SpendByChannel = () => {
                     <BarChart
                         data={chartData}
                         layout="vertical"
-                        margin={{ left: 40, right: 40, top: 10, bottom: 10 }}
+                        margin={{ left: 2, right: 20, top: 10, bottom: 10 }}
                         width={500}
                         height={200}
                     >
@@ -70,13 +70,13 @@ const SpendByChannel = () => {
                             fill="var(--color-amount)"
                             radius={4}
                         >
-                            <LabelList
+                            {/* <LabelList
                                 dataKey="channel"
                                 position="insideLeft"
                                 offset={8}
                                 className="fill-[--color-label]"
                                 fontSize={12}
-                            />
+                            /> */}
                             <LabelList
                                 dataKey="amount"
                                 position="right"

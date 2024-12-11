@@ -22,6 +22,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Roadmap / Future Plans
 - [ ] Add more charts
+- [ ] Add loading states
 - [ ] Budgeting feature like [RangerBudget](https://rangerbudget.com/)
 - [ ] Twilio integration for SMS notifications
 - [ ] Vapi or OpenAI realtime integration for voice AI
@@ -63,4 +64,5 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
 ![screenrun-12-10-2024-03-32-18](https://github.com/user-attachments/assets/bd238347-4293-47d3-8a04-40750f3b4ad7)

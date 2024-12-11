@@ -6,7 +6,7 @@ import {
     Text,
     TextInput,
 } from "@tremor/react";
-import { BarChart, Bar, CartesianGrid, XAxis, YAxis, LabelList } from "recharts";
+import { BarChart, Bar, CartesianGrid, XAxis, YAxis, LabelList, Tooltip } from "recharts";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -89,13 +89,13 @@ const RecurringTransaction = () => {
                                 fill="var(--color-amount)"
                                 radius={4}
                             >
-                                <LabelList
+                                {/* <LabelList
                                     dataKey="merchant"
                                     position="insideLeft"
                                     offset={8}
                                     className="fill-[--color-label]"
                                     fontSize={12}
-                                />
+                                /> */}
                                 <LabelList
                                     dataKey="amount"
                                     position="right"

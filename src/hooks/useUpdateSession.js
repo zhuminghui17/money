@@ -13,11 +13,11 @@ export default function UseUpdateSession({ data }) {
         setCalled(true);
         await update(data);
         router.push("/dashboard");
-    }, [status]);
+    }, [status, data, update, router]);
 
     useEffect(() => {
         if (status === "authenticated" && !called) fetchData();
-    }, [status]);
+    }, [status, called, fetchData]);
 
     return <div></div>;
 }

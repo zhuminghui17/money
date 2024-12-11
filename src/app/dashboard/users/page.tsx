@@ -56,7 +56,7 @@ export default function Users() {
 
     useEffect(() => {
         fetchData(1);
-    }, [selectedPayStatus, pageSize]);
+    }, [selectedPayStatus, pageSize, fetchData]);
 
     const setPayState = async (email: string, isPro: boolean) => {
         const res = await apiCall.post("/api/v1/user/users/pay", {

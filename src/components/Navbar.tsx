@@ -46,7 +46,7 @@ const Navbar = () => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     return (
         <header className="sticky top-0 z-10 flex w-full h-16 px-4 border-b bg-gradient-to-b from-background/10 via-background/50 to-background/80 backdrop-blur-xl">
