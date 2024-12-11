@@ -25,6 +25,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Spinner } from "@/components/chatui/spinner";
 
 interface KPI {
   title: string;
@@ -324,21 +325,6 @@ export default function Dashboard() {
 
   const convertedItems = useMemo(() => convertItemsToAccounts(items, accounts_info), [items, accounts_info]);
 
-  const spinner = (
-    <svg
-      fill="none"
-      stroke="2"
-      strokeWidth="1.5"
-      viewBox="0 0 24 24"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      xmlns="http://www.w3.org/2000/svg"
-      className="size-5 animate-spin stroke-zinc-400"
-    >
-      <path d="M12 3v3m6.366-.366-2.12 2.12M21 12h-3m.366 6.366-2.12-2.12M12 21v-3m-6.366.366 2.12-2.12M3 12h3m-.366-6.366 2.12 2.12"></path>
-    </svg>
-  );
-
   const handleClickCustomGPT = async  () => {
     await navigator.clipboard.writeText(`${window.location.origin}/api/public/user/${userId}/getGptSpec`);
     toast.success("OpenAPI spec copied to clipboard!");
@@ -348,7 +334,7 @@ export default function Dashboard() {
   return (
     <>
     { convertedItems?.length > 0 ? 
-    <main className="min-h-screen p-4 m-auto max-w-7xl">
+    <main className="min-h-screen px-4 py-6 sm:px-6 lg:px-8 m-auto max-w-7xl">
       <Tabs defaultValue="accounts" className="w-full">
       <TabsList className="grid w-full max-w-full grid-cols-2">
         <TabsTrigger value="accounts"><CircleDollarSign className="h-4 mr-2" />Accounts</TabsTrigger>
@@ -388,7 +374,7 @@ export default function Dashboard() {
             </div>
             {/* AI Summary */}
             <div className="my-6 border rounded-lg p-6 bg-primary/10">
-              <p className="text-sm text-muted-foreground">{dashboardSummary}</p>
+              {dashboardSummary ? <p className="text-sm text-muted-foreground">{dashboardSummary}</p> : Spinner}
             </div>
             {/* Account Cards */}
             <div className="my-6">
@@ -413,7 +399,7 @@ export default function Dashboard() {
               </div>
             </div>
           </>
-        ) : null}
+        ) : Spinner}
       {/* Settings Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {/* SMS Support Card */}
@@ -492,10 +478,10 @@ export default function Dashboard() {
     : 
     <div className="min-h-screen p-4 m-auto max-w-7xl">
       <div className="flex flex-col items-center justify-center h-full border rounded-lg p-4">
-      <div className="ml-4 h-[24px] flex flex-row items-center flex-1 space-y-2 overflow-hidden px-1">
-        {spinner}
-      </div>
         <h1 className="my-6 text-xl text-center">No accounts connected</h1>
+        <div className="ml-4 h-[24px] flex flex-row items-center flex-1 space-y-2 overflow-hidden px-1">
+          {Spinner}
+        </div>
         <ConnectButtonModal />
       </div>
     </div>

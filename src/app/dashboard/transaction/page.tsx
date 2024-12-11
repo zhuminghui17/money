@@ -20,6 +20,7 @@ import { Account, Item, Transaction } from "@/lib/types";
 import ModernTable from "./components/Table";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Spinner } from "@/components/chatui/spinner";
 
 type AccountMap = { [key: string]: string };
 
@@ -158,6 +159,9 @@ export default function Transactions() {
         };
     });
 
+    // Use finalTransactions to determine loading state
+    const isLoading = !finalTransactions || finalTransactions.length === 0;
+
     return (
         <main className="min-h-screen p-2 sm:p-4 justify-center m-auto max-w-[95vw] sm:max-w-6xl">
             <div className="flex justify-end gap-2 w-full mx-auto">
@@ -284,19 +288,57 @@ export default function Transactions() {
                 </div>
             </div>
             <div className="my-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {kpis?.map((item, index) => (
-                    <Card key={"kpis" + index} className="w-full p-3 sm:p-4">
-                        <div className="space-y-1 sm:space-y-2">
-                            <p className="text-sm sm:text-md">{item.title}</p>
-                            <div className="text-base sm:text-lg font-medium">{item.metric}</div>
-                        </div>
-                    </Card>
-                ))}
+                {isLoading ? (
+                    <>
+                        <Card className="w-full p-3 sm:p-4 flex justify-center items-center">
+                            {Spinner}
+                        </Card>
+                        <Card className="w-full p-3 sm:p-4 flex justify-center items-center">
+                            {Spinner}
+                        </Card>
+                        <Card className="w-full p-3 sm:p-4 flex justify-center items-center">
+                            {Spinner}
+                        </Card>
+                    </>
+                ) : (
+                    kpis?.map((item, index) => (
+                        <Card key={"kpis" + index} className="w-full p-3 sm:p-4">
+                            <div className="space-y-1 sm:space-y-2">
+                                <p className="text-sm sm:text-md">{item.title}</p>
+                                <div className="text-base sm:text-lg font-medium">{item.metric}</div>
+                            </div>
+                        </Card>
+                    ))
+                )}
             </div>
-            {/* Graph */}
-            {showChart && <TransactionChart button={<Button onClick={toggleFilters} variant="outline" type="button">{showChart ? "Hide chart" : "Show chart"}</Button>} />}
-            {/* Table */}
-            <ModernTable transactions={finalTransactions} />
+            {/* Graph with loading state */}
+            {showChart && (
+                isLoading ? (
+                    <Card className="w-full p-8 flex justify-center items-center">
+                        {Spinner}
+                    </Card>
+                ) : (
+                    <TransactionChart 
+                        button={
+                            <Button 
+                                onClick={toggleFilters} 
+                                variant="outline" 
+                                type="button"
+                            >
+                                {showChart ? "Hide chart" : "Show chart"}
+                            </Button>
+                        } 
+                    />
+                )
+            )}
+            {/* Table with loading state */}
+            {isLoading ? (
+                <Card className="mt-4 w-full p-8 flex justify-center items-center">
+                    {Spinner}
+                </Card>
+            ) : (
+                <ModernTable transactions={finalTransactions} />
+            )}
             <br />
         </main>
     );

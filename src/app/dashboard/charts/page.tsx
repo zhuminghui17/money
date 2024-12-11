@@ -26,6 +26,7 @@ import RecurringTransaction from "./recurringSpend/RecurringTransaction";
 import { AppDispatch, RootState } from "@/store";
 import { Item } from "@/lib/types";
 import GithubGraph from "./spendOverTime/GithubGraph";
+import { Spinner } from "@/components/chatui/spinner";
 
 const Kpis = {
     Spend: "spend",
@@ -73,7 +74,6 @@ export default function Charts() {
         if (isTransactionsLoaded) {
             dispatch(getDashboardData());
             dispatch(getChartsData({ filterDate, selectedAccounts }));
-            setIsDataReady(true);
         }
     }, [dispatch, filterDate, isTransactionsLoaded, selectedAccounts]);
 
@@ -248,20 +248,42 @@ export default function Charts() {
             </div>
             <div className="mt-4 flex flex-col gap-4 max-w-full">
                 <div className="max-w-full">
-                    <GithubGraph data={githubGraph}/>
+                    {!githubGraph ? (
+                        <div className="flex justify-center p-8 border rounded-md">
+                            {Spinner}
+                        </div>
+                    ) : (
+                        <GithubGraph data={githubGraph}/>
+                    )}
                 </div>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                        <TopPurchaseCategory />
-                        <SpendByChannel />
-                        <RecurringTransaction />
+                    {!githubGraph ? (
+                        <>
+                            {Array(3).fill(null).map((_, index) => (
+                                <div key={index} className="flex justify-center p-8 border rounded-md">{Spinner}</div>
+                            ))}
+                        </>
+                    ) : (
+                        <>
+                            <TopPurchaseCategory />
+                            <SpendByChannel />
+                            <RecurringTransaction />
+                        </>
+                    )}
                 </div>
                 <div className="max-w-full">
-                    <MonthlySpend
-                        selectedKpi={selectedKpi}
-                        selectedIndex={selectedIndex}
-                        setSelectedIndex={setSelectedIndex}
-                        filterCreditCards={filterCreditCards}
-                    />
+                    {!githubGraph ? (
+                        <div className="flex justify-center p-8 border rounded-md">
+                            {Spinner}
+                        </div>
+                    ) : (
+                        <MonthlySpend
+                            selectedKpi={selectedKpi}
+                            selectedIndex={selectedIndex}
+                            setSelectedIndex={setSelectedIndex}
+                            filterCreditCards={filterCreditCards}
+                        />
+                    )}
                 </div>
             </div>
         </main>
