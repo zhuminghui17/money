@@ -131,7 +131,7 @@ export const getDashboard = async () => {
     const netWorth = calculateNetWorth(res);
     return {
       kpis,
-      netWorth
+      netWorth,
     };
   });
 
@@ -248,7 +248,9 @@ export const getDashboard = async () => {
     }
   });
 
-  const dashboardData = { kpis, accounts_info };
+  const userId = user.id;
+
+  const dashboardData = { kpis, accounts_info, userId };
 
   return dashboardData;
 }

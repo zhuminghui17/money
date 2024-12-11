@@ -11,6 +11,7 @@ import { Info } from "lucide-react";
 import { ChartContainer, ChartTooltipContent, ChartTooltip } from "@/components/ui/chart";
 import { Title } from "@tremor/react";
 import { colors } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
 
 interface MonthlySpendProps {
   selectedKpi: string;
@@ -37,7 +38,7 @@ const MonthlySpend: React.FC<MonthlySpendProps> = ({
       },
       moneyIn: {
         label: selectedKpi === "spend" ? "MoneyIn" : "MoneyInCount",
-        color: colors[3],
+        color: "#6366f1",
       },
     }),
     [selectedKpi]
@@ -69,13 +70,16 @@ const MonthlySpend: React.FC<MonthlySpendProps> = ({
       averageMonthlySpend,
       averageMonthlyMoneyIn,
       avgTransaction,
+      totalSpend,
+      totalMoneyIn,
     };
   }, [monthlySpend, monthlySpendNoCards, filterCreditCards]);
 
-  const { averageMonthlySpend, avgTransaction } = calculatedAveragesMonthly;
+  const { averageMonthlySpend, avgTransaction, totalSpend, totalMoneyIn } = calculatedAveragesMonthly;
+  const totalSpendPercentage = (totalSpend / (totalMoneyIn + totalSpend)) * 100 || 0;
 
   return (
-    <Card className="p-4 bg-background">
+    <Card className="p-6 bg-background">
       <div className="md:flex justify-between">
         <div>
           <div className="flex items-center space-x-2">
@@ -92,14 +96,6 @@ const MonthlySpend: React.FC<MonthlySpendProps> = ({
           <p className="text-sm text-muted-foreground">
             Spend calculated for each month
           </p>
-          <div className="flex flex-col gap-2">
-          <h3 className="text-lg mt-2 p-2 border rounded-md">
-            Avg {""}
-            {selectedKpi === "spend"
-              ? dollarFormatter(averageMonthlySpend)
-              : numberFormatter(avgTransaction)} {" / month"}
-          </h3>
-          </div>
         </div>
         <Tabs
           defaultValue={selectedIndex === 0 ? "dollars" : "transactions"}
@@ -113,12 +109,26 @@ const MonthlySpend: React.FC<MonthlySpendProps> = ({
           </TabsList>
         </Tabs>
       </div>
+      <div className="mt-2 flex justify-between w-full">
+        <h3 className="text-md border rounded-lg p-2 pr-4">
+          Avg {""}
+          {selectedKpi === "spend"
+            ? `$${averageMonthlySpend.toFixed(0)}`
+            : numberFormatter(avgTransaction)} {" / month"}
+        </h3>
+        <div>
+        <p className="text-sm text-muted-foreground">
+          {totalSpendPercentage.toFixed(0)}% spend ratio
+        </p>
+        <Progress value={totalSpendPercentage} />
+        </div>
+      </div>
       <div className="mt-8 overflow-auto">
         <ChartContainer className="mt-5 h-40 w-full" config={chartConfig}>
           <BarChart
             data={filterCreditCards ? monthlySpendNoCards : monthlySpend}
             margin={{
-              left: 12,
+              left: 0,
               right: 12,
             }}
             className="w-full"
@@ -133,7 +143,7 @@ const MonthlySpend: React.FC<MonthlySpendProps> = ({
             <YAxis 
               tickLine={false}
               axisLine={false}
-              tickFormatter={selectedKpi === "spend" ? dollarFormatter : numberFormatter}
+              tickFormatter={selectedKpi === "spend" ? (value: number) => `$${value.toFixed(0)}` : (value: number) => numberFormatter(value)}
             />
             <ChartTooltip
               cursor={false}

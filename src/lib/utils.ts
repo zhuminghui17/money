@@ -88,17 +88,21 @@ export const getMessageFromCode = (resultCode: string) => {
   }
 }
 
+export const colorsFull = [
+  "#064E3B", // emerald-900
+  "#065F46", // emerald-800
+  "#047857", // emerald-700
+  "#059669", // emerald-600
+  "#10B981", // emerald-500
+  "#34D399", // emerald-400
+  "#6EE7B7", // emerald-300
+  "#A7F3D0", // emerald-200
+  "#D1FAE5", // Lightest emerald
+];
+
+
 export const colors = [
-  "#004d00", // Darkest green
-  "#006600",
-  "#008000",
-  "#009900",
-  "#00b300",
-  "#00cc00",
-  "#00e600",
-  "#00ff00", // Pure green
-  "#00ff66",
-  "#00ff99",
-  "#00ffcc",
-  "#00ffff", // Emerald
+  "#059669", // emerald-600
+  "#10B981", // emerald-500
+  "#34D399", // emerald-400
 ];

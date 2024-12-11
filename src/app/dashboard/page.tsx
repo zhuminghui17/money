@@ -7,15 +7,24 @@ import { AnyAction } from "redux";
 import Link from "next/link";
 import { getDashboardData, setUserDashboardAISummary } from "@/store/actions/useUser";
 import { getAIResponse } from "@/hooks/actions";
-
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import ConnectButtonModal from "@/components/FullConnectButton";
-import { ArrowRightIcon, CreditCardIcon, BanknoteIcon, ChartBarIcon, CircleDollarSign } from "lucide-react";
+import { ArrowRightIcon, CreditCardIcon, BanknoteIcon, ChartBarIcon, CircleDollarSign, ClipboardPlus, Wrench } from "lucide-react";
 import Charts from "./charts/page";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface KPI {
   title: string;
@@ -82,6 +91,7 @@ interface RootState {
     items: Item[];
     accounts_info: AccountsInfo;
     dashboardSummary: string;
+    userId: string;
   };
   plaid: {
     isTransactionsLoaded: boolean;
@@ -284,6 +294,8 @@ export default function Dashboard() {
   const hasMadeApiCall = useRef(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const userId = useSelector((state: RootState) => state.user.userId);
+
   const fetchData = useCallback(() => {
     if (isTransactionsLoaded) {
       dispatch<any>(getDashboardData());
@@ -327,14 +339,20 @@ export default function Dashboard() {
     </svg>
   );
 
+  const handleClickCustomGPT = async  () => {
+    await navigator.clipboard.writeText(`${window.location.origin}/api/public/user/${userId}/getGptSpec`);
+    toast.success("OpenAPI spec copied to clipboard!");
+    toast.info("Copy & Paste the spec within the Custom GPT Configure tab");
+  }
+
   return (
     <>
     { convertedItems?.length > 0 ? 
     <main className="min-h-screen p-4 m-auto max-w-7xl">
       <Tabs defaultValue="accounts" className="w-full">
       <TabsList className="grid w-full max-w-full grid-cols-2">
-        <TabsTrigger value="accounts"><CircleDollarSign className="h-4 mr-2" /> Accounts</TabsTrigger>
-        <TabsTrigger value="summary"><ChartBarIcon className="h-4 mr-2" /> Insights</TabsTrigger>
+        <TabsTrigger value="accounts"><CircleDollarSign className="h-4 mr-2" />Accounts</TabsTrigger>
+        <TabsTrigger value="summary"><ChartBarIcon className="h-4 mr-2" />Spending Insights</TabsTrigger>
       </TabsList>
       <TabsContent value="accounts" className="w-full">
         {convertedItems && convertedItems.length > 0 ? (
@@ -416,17 +434,52 @@ export default function Dashboard() {
         </Card>
 
         {/* ChatGPT Integration Card */}
-        <Card>
+        <Card className="w-full">
           <CardHeader>
             <CardTitle>Create Your Own Custom GPT</CardTitle>
             <CardDescription>
-              Leverage the Serverless APIs to bring the power of your personal finance AI assistant to ChatGPT. We provide prompts and actions to interface with Plaid through ChatGPT.
+              Leverage Serverless APIs to securely pass your Plaid finance data to ChatGPT.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button disabled>
-              Coming Soon
-            </Button>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" className="w-full">
+                  <Wrench className="w-4 h-4 mr-1" />
+                  View Setup Instructions
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Custom GPT Setup Instructions</SheetTitle>
+                  <SheetDescription>
+                    Step 1: 🔑 Define your own PUBLIC_API_KEY within your .env file. Use this API key value within the "x-api-key" parameter to secure the private endpoint.
+                    <br /><br />
+                    Step 2: 🛠️ Go to ChatGPT and navigate to "My GPTs", then click Create New GPT. Navigate to the Configure tab and add a new action.
+                    <br /><br />
+                    Step 3: 📋 Copy and paste the following Import URL where it says "Import URL". This will paste your custom OpenAPI spec to interface with Plaid data.
+                    <div className="flex justify-center gap-2 mt-4">
+                      <Input value={`${window.location.origin}/api/public/user/${userId}/getGptSpec`} />
+                      <Button onClick={handleClickCustomGPT}>
+                        <ClipboardPlus className="w-4 h-4 mr-1" />
+                        Copy Import URL
+                      </Button>
+                    </div>
+                    <br/>
+                    You should see two functions: getUserAccounts and getUserTransactions (pre-populated with your User ID). Save and provide instructions / prompting for the GPT. 🎉 
+                    <br /><br />
+                    ⚠️ Note: This app must be deployed, this ChatGPT action will not work on localhost because ChatGPT needs to call a hosted endpoint.
+                  </SheetDescription>
+                </SheetHeader>
+              </SheetContent>
+            </Sheet>
+            <div className="flex justify-center gap-2 mt-4">
+              <Input value={`${window.location.origin}/api/public/user/${userId}/getGptSpec`} />
+              <Button onClick={handleClickCustomGPT}>
+                <ClipboardPlus className="w-4 h-4 mr-1" />
+                Copy Import URL
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>

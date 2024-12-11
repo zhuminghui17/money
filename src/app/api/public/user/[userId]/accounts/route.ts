@@ -6,7 +6,7 @@ export async function GET(req: Request, { params }: { params: { userId: string }
 
     // Validate API Key from Headers
     const apiKey = req.headers.get('x-api-key');
-    const VALID_API_KEY = '1234567890'; // Replace with an env var in production
+    const VALID_API_KEY = process.env.PUBLIC_API_KEY; // This is the API key you defined in the .env file
     if (apiKey !== VALID_API_KEY) {
         return NextResponse.json({
             message: "Unauthorized",

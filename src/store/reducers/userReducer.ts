@@ -16,6 +16,7 @@ const initialState = {
     user: {},
     items: [],
     kpis: [],
+    userId: "",
     accounts_info: {},
     chartData: [],
     chartDataByMonth: [],
