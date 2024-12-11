@@ -66,6 +66,8 @@ export default function Users() {
         setUsers(users.map(user => (user.email === email ? { ...user, isPro: res.data } : user)));
     };
 
+    console.log(users);
+
     return (
         <main className="min-h-screen p-4 m-auto max-w-7xl bg-muted/50">
             {/* <Text className="mt-6">
@@ -112,6 +114,7 @@ export default function Users() {
                         <TableHead>
                             <TableRow>
                                 <TableHeaderCell>Email</TableHeaderCell>
+                                <TableHeaderCell>UUID</TableHeaderCell>
                                 <TableHeaderCell className="text-right">Name</TableHeaderCell>
                                 <TableHeaderCell className="text-right">Paid</TableHeaderCell>
                             </TableRow>
@@ -121,6 +124,7 @@ export default function Users() {
                             {users.map((item, index) => (
                                 <TableRow key={"transaction_" + index}>
                                     <TableCell>{item.email}</TableCell>
+                                    <TableCell>{item.id}</TableCell>
                                     <TableCell className="max-w-sm overflow-hidden text-right text-ellipsis">
                                         {item.name}
                                     </TableCell>

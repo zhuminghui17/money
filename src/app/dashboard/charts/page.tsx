@@ -227,11 +227,10 @@ export default function Charts() {
                             value: account.account_id,
                             label: account.name
                         })))}
+                        variant="secondary"
                         onValueChange={handleSetSelectedAccounts}
                         defaultValue={selectedAccounts}
                         placeholder="Select Accounts..."
-                        variant="inverted"
-                        animation={2}
                     />
                 </div>
                 <div className="w-full sm:w-auto">

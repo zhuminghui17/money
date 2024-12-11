@@ -19,7 +19,6 @@ import {
 import { Dialog, Transition } from "@headlessui/react";
 import {
     SearchIcon,
-    ArrowsExpandIcon,
     ArrowRightIcon
 } from "@heroicons/react/solid";
 import { usNumberformatter } from "@/utils/util";
@@ -64,7 +63,7 @@ const TopPurchaseCategory = () => {
         <Card className="w-full p-6 bg-background">
             <div className="w-full">
                 <Title>Top Purchase Categories</Title>
-                <Text>Your breakdown of purchases by merchant category</Text>
+                <Text>Your breakdown of purchases by category</Text>
                 <ChartContainer
                     config={chartConfig}
                     className="mx-auto w-full"

@@ -362,6 +362,8 @@ export const getAllUsers = async (filter) => {
       email: 1,
       name: 1,
       isPro: 1,
+      id: 1,
+      ACCESS_TOKEN: 1,
     },
     skip: (currentPage - 1) * pageSize,
     take: pageSize,

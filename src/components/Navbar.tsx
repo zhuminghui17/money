@@ -104,7 +104,7 @@ const Navbar = () => {
                             </div>
                         )}
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1">
                         <div className="items-center text-center">
                             <Link href="https://github.com/cameronking4/shadcn-openai-plaid-dashboard">
                                 <Button variant="outline" className="p-1 mr-2 rounded-full">
@@ -112,7 +112,7 @@ const Navbar = () => {
                                 </Button>
                             </Link>
                         </div>
-                        <ul className="flex items-center gap-2 mr-2">
+                        <ul className="flex items-center gap-2 mr-4">
                             <DarkModeSwitcher />
                         </ul>
                         <DropdownUser />

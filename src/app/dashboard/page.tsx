@@ -368,6 +368,10 @@ export default function Dashboard() {
                 </Card>
               ))}
             </div>
+            {/* AI Summary */}
+            <div className="my-6 border rounded-lg p-6 bg-primary/10">
+              <p className="text-sm text-muted-foreground">{dashboardSummary}</p>
+            </div>
             {/* Account Cards */}
             <div className="my-6">
               <div className="flex justify-between items-center">
