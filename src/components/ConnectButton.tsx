@@ -54,6 +54,16 @@ const ConnectButton = ({ children, type, setShowConnectModal }: { children: Reac
         open();
     };
 
+    const setupConfig = {
+        token: !isEmpty(linkToken) ? linkToken[type].link_token : "Token not found",
+        open: open,
+        ready: ready,
+        onSuccess: onSuccess,
+        linkInfo: linkInfo,
+    }
+
+    console.log(setupConfig);
+
     return (
         <Button
             onClick={handleOpenPlaidLink}
