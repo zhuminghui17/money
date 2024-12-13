@@ -333,7 +333,6 @@ export default function Dashboard() {
 
   return (
     <>
-    { convertedItems?.length > 0 ? 
     <main className="min-h-screen px-4 py-6 sm:px-6 lg:px-8 m-auto max-w-7xl">
       <Tabs defaultValue="accounts" className="w-full">
       <TabsList className="grid w-full max-w-full grid-cols-2">
@@ -341,7 +340,6 @@ export default function Dashboard() {
         <TabsTrigger value="summary"><ChartBarIcon className="h-4 mr-2" />Spending Insights</TabsTrigger>
       </TabsList>
       <TabsContent value="accounts" className="w-full">
-        {convertedItems && convertedItems.length > 0 ? (
           <>
           {/* KPI Cards */}
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-6 mb-4">
@@ -399,7 +397,6 @@ export default function Dashboard() {
               </div>
             </div>
           </>
-        ) : Spinner}
       {/* Settings Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {/* SMS Support Card */}
@@ -475,17 +472,6 @@ export default function Dashboard() {
           </TabsContent>
       </Tabs>
     </main>
-    : 
-    <div className="min-h-screen p-4 m-auto max-w-7xl">
-      <div className="flex flex-col items-center justify-center h-full border rounded-lg p-4">
-        <h1 className="my-6 text-xl text-center">No accounts connected</h1>
-        <div className="ml-4 h-[24px] flex flex-row items-center flex-1 space-y-2 overflow-hidden px-1">
-          {Spinner}
-        </div>
-        <ConnectButtonModal />
-      </div>
-    </div>
-    }
     </>
   );
 }
