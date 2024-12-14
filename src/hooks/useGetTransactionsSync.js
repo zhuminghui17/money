@@ -21,7 +21,7 @@ const useGetTransactionsSync = () => {
                     })
                 );
                 const response = await apiCall.get(
-                    "/api/v1/plaid/transactions"
+                    "/api/v1/plaid/transactions/all"
                 );
                 const data = await response.data;
                 dispatch(

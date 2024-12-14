@@ -47,7 +47,7 @@ export default function Transactions() {
         isEmpty(searchParams.get("channel")) ? "all" : searchParams.get("channel") || null
     );
     const currentDate = new Date();
-    const threeMonthsAgo = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, currentDate.getDate());
+    const threeMonthsAgo = new Date(currentDate.getFullYear(), currentDate.getMonth() - 4, currentDate.getDate());
 
     const [filterDate, setFilterDate] = useState({
         startDate: isEmpty(searchParams.get("startDate"))

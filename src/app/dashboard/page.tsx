@@ -115,7 +115,14 @@ const convertItemsToAccounts = (items: Item[], accounts_info: AccountsInfo): Con
     const institutionName = item.institution.name;
     const accountsWithInstitutionName = item.accounts.map((account) => {
       const { balances, ...restAccount } = account;
-      const { available, current, iso_currency_code, limit, unofficial_currency_code } = balances;
+      
+      const {
+        available = null,
+        current = 0,
+        iso_currency_code = '',
+        limit = null,
+        unofficial_currency_code = null,
+      } = balances || {};
 
       return {
         ...restAccount,

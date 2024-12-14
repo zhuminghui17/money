@@ -23,6 +23,7 @@ export const calculateKPIs = (apiResponse) => {
 
   apiResponse.accounts.forEach((account) => {
     let { available, current, limit } = account.balances;
+    console.log(account, account.balances);
     if (available == null) available = 0;
     if (current == null) current = 0;
     if (limit == null) limit = 0;
@@ -36,7 +37,7 @@ export const calculateKPIs = (apiResponse) => {
       account.type === "depository"
     ) {
       totalCurrentBalance += current;
-      totalAvailableBalance += available;
+      totalAvailableBalance += available === 0 ? current : available;
     }
 
     if (account.type === "loan") {

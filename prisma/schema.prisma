@@ -184,6 +184,7 @@ model Balances {
   id                      String   @id @default(uuid())
   available               Float?
   current                 Float?
+  last_updated_datetime   DateTime?
   iso_currency_code       String?
   limit                   Float?
   unofficial_currency_code String?

@@ -23,7 +23,7 @@ const ConnectButtonModal = () => {
                 variant="outline"
             >
                 <PlusCircleIcon className="w-[22px] mr-2" />
-                Add Bank Accounts, Credit Cards, or Investment Accounts
+                Add New Accounts
             </Button>
             <Dialog
             modal={false}
